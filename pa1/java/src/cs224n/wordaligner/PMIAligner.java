@@ -41,8 +41,8 @@ public class PMIAligner implements WordAligner {
         }
       }
       // index??
-      alignment.addPredictedAlignment(s, maxIndex);
-      // if (maxIndex == 0) System.out.println("Get aligned to NULL");
+      alignment.addPredictedAlignment(s + 1, maxIndex);
+      if (maxIndex == 0) System.out.println("Get aligned to NULL");
     }
     return alignment;
   }
@@ -53,7 +53,7 @@ public class PMIAligner implements WordAligner {
     this.targetCounts = new Counter<String>();
 
     for (SentencePair pair: trainingPairs) {
-      //pair.addNullToTargetWords();
+      pair.addNullToTargetWords();
       for (String sourceWord: pair.getSourceWords()) {
         this.sourceCounts.incrementCount(sourceWord, 1);
         for (String targetWord: pair.getTargetWords()) {
