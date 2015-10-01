@@ -21,21 +21,15 @@ public class PMIAligner implements WordAligner {
   private Counter<String> sourceCounts;
   private Counter<String> targetCounts;
 
-  public Alignment align(SentencePair sentencePair) {
+  public Alignment align(SentencePair pair) {
     Alignment alignment = new Alignment();
-    for (int s = 0; s < sentencePair.getSourceWords().size(); s++) {
-      String sourceWord = sentencePair.getSourceWords().get(s);
-      // TODO: NULL?
-      int maxIndex = -1;
+    // System.out.println(pair.getTargetWords());
+    for (int s = 0; s < pair.getSourceWords().size(); s++) {
+      String sourceWord = pair.getSourceWords().get(s);
+      int maxIndex = 0;
       double maxProb = 0;
-      double sourceProb = this.sourceCounts.getCount(sourceWord);
-      if (sourceProb == 0) {
-        // TODO: Is this correct?
-        alignment.addPredictedAlignment(s, -1);
-        continue;
-      }
-      for (int t = 0; t < sentencePair.getTargetWords().size(); t++) {
-        String targetWord = sentencePair.getTargetWords().get(t);
+      for (int t = 0; t < pair.getTargetWords().size(); t++) {
+        String targetWord = pair.getTargetWords().get(t);
         double targetProb = this.targetCounts.getCount(targetWord);
         if (targetProb == 0) 
           continue;
@@ -46,7 +40,9 @@ public class PMIAligner implements WordAligner {
           maxIndex = t;
         }
       }
+      // index??
       alignment.addPredictedAlignment(s, maxIndex);
+      // if (maxIndex == 0) System.out.println("Get aligned to NULL");
     }
     return alignment;
   }
@@ -57,6 +53,7 @@ public class PMIAligner implements WordAligner {
     this.targetCounts = new Counter<String>();
 
     for (SentencePair pair: trainingPairs) {
+      //pair.addNullToTargetWords();
       for (String sourceWord: pair.getSourceWords()) {
         this.sourceCounts.incrementCount(sourceWord, 1);
         for (String targetWord: pair.getTargetWords()) {
