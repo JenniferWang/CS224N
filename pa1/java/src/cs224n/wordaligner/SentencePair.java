@@ -24,12 +24,6 @@ public class SentencePair {
     return sourceFile;
   }
 
-  public void addNullToTargetWords() {
-    if (targetWords.size() > 0 && targetWords.get(0) == "NULL")
-      return;
-    targetWords.add(0, "NULL");
-  }
-
   public List<String> getTargetWords() {
     return targetWords;
   }

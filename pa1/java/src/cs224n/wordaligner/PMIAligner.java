@@ -13,7 +13,7 @@ import java.util.List;
  * @author Dan Klein
  * @author Spence Green
  */
-public class PMIAligner implements WordAligner {
+public class PMIAligner extends AbstractAligner {
 
   private static final long serialVersionUID = 1315751943476440515L;
   
@@ -22,7 +22,6 @@ public class PMIAligner implements WordAligner {
 
   public Alignment align(SentencePair pair) {
     Alignment alignment = new Alignment();
-    // System.out.println(pair.getTargetWords());
     for (int s = 0; s < pair.getSourceWords().size(); s++) {
       String sourceWord = pair.getSourceWords().get(s);
       int maxIndex = 0;
@@ -47,23 +46,8 @@ public class PMIAligner implements WordAligner {
   }
 
   public void train(List<SentencePair> trainingPairs) {
-    this.sourceTargetCounts = new CounterMap<String,String>();
-    this.targetCounts = new Counter<String>();
-
-    for (SentencePair pair: trainingPairs) {
-      // pair.addNullToTargetWords();
-      for (String sourceWord: pair.getSourceWords()) {
-        for (String targetWord: pair.getTargetWords()) {
-          this.sourceTargetCounts.incrementCount(sourceWord, targetWord, 1);
-        }
-      }
-      for (String targetWord : pair.getTargetWords()) {
-        this.targetCounts.incrementCount(targetWord, 1);
-      }
-    }
-    this.targetCounts = Counters.normalize(this.targetCounts);
-    this.sourceTargetCounts = 
-      Counters.conditionalNormalize(this.sourceTargetCounts);
+    this.sourceTargetCounts = this.getSourceTargetCounts(trainingPairs);
+    this.targetCounts = this.getTargetCounts(trainingPairs);
   }
 
 }
