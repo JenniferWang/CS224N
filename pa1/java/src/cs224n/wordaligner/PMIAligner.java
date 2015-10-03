@@ -45,9 +45,32 @@ public class PMIAligner extends AbstractAligner {
     return alignment;
   }
 
-  public void train(List<SentencePair> trainingPairs) {
-    this.sourceTargetCounts = this.getSourceTargetCounts(trainingPairs);
-    this.targetCounts = this.getTargetCounts(trainingPairs);
+  protected CounterMap<String, String> computeSourceTargetCounts(
+    List<SentencePair> trainingPairs
+  ) {
+    CounterMap<String, String> counter = new CounterMap<String, String>();
+    for (SentencePair pair: trainingPairs) {
+      for (String sourceWord: pair.getSourceWords()) {
+        for (String targetWord: pair.getTargetWords()) {
+          counter.incrementCount(sourceWord, targetWord, 1);
+        }
+      }
+    }
+    return Counters.conditionalNormalize(counter);
   }
 
+  protected Counter<String> computeTargetCounts(List<SentencePair> trainingPairs) {
+    Counter<String> counter = new Counter<String>();
+    for (SentencePair pair: trainingPairs) {
+      for (String targetWord : pair.getTargetWords()) {
+        counter.incrementCount(targetWord, 1);
+      }
+    }
+    return Counters.normalize(counter);
+  }
+  
+  public void train(List<SentencePair> trainingPairs) {
+    this.sourceTargetCounts = this.computeSourceTargetCounts(trainingPairs);
+    this.targetCounts = this.computeTargetCounts(trainingPairs);
+  }
 }
