@@ -1,7 +1,13 @@
-## Results
+## Results (on 10k development set)
 |               | French-English| Hindi-English | Chinese-English |
 | ------------- |:-------------:| -------------:|----------------:|
-| PMIAligner    |               |               |                 |
-| IBM Model1    | 0.42 on 10k   |               |                 |
-| IBM Model2    |               |               |                 |
+| PMIAligner    | 0.68            |    0.84           |   0.85       |
+| IBM Model1    | 0.42          |               |                 |
+| IBM Model2    | 0.36          |               |                 |
 
+## Results (test set)
+|               | French-English| Hindi-English | Chinese-English |
+| ------------- |:-------------:| -------------:|----------------:|
+| PMIAligner    |      0.4       |      0.83         |      0.77           |
+| IBM Model1    |           |               |                 |
+| IBM Model2    |            |               |                 |
