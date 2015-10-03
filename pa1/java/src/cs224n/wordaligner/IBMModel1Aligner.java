@@ -20,35 +20,39 @@ public class IBMModel1Aligner extends AbstractAligner {
   
   private CounterMap<String, String> sourceTargetCounts;
   private Counter<String> targetCounts;
-  private CounterMap<String, String> t; /*source-to-target*/
+  private CounterMap<String, String> translation; /*source-to-target*/
 
   public Alignment align(SentencePair pair) {
     Alignment alignment = new Alignment();
     for (int s = 0; s < pair.getSourceWords().size(); s++) {
       String sourceWord = pair.getSourceWords().get(s);
-      int maxIndex = pair.getTargetWords().indexOf(
-        this.t.getCounter(sourceWord).argMax()
-      );
-      alignment.addPredictedAlignment(s, maxIndex);
-      //if (maxIndex == 0) System.out.println("Get aligned to NULL");
+      int maxIndex = 0;
+      double maxProb = 0;
+      for (int t = 0; t < pair.getTargetWords().size(); t++) {
+        String targetWord = pair.getTargetWords().get(t);
+        if (this.translation.getCount(sourceWord, targetWord) > maxProb) {
+          maxProb = this.translation.getCount(sourceWord, targetWord);
+          maxIndex = t;
+        }
+      }
+      alignment.addPredictedAlignment(maxIndex, s);
     }
     return alignment;
   }
 
   protected void init(List<SentencePair> trainingPairs) {
-    // for (SentencePair pair: trainingPairs)
-    //   this.addNullToTargetWords(pair);
+    for (SentencePair pair: trainingPairs)
+      this.addNullToTargetWords(pair);
 
-    this.t = new CounterMap<String, String>();
+    this.translation = new CounterMap<String, String>();
     for (SentencePair pair: trainingPairs) {
       for (String sourceWord: pair.getSourceWords()) {
         for (String targetWord: pair.getTargetWords()) {
-          t.setCount(sourceWord, targetWord, 1);
+          this.translation.setCount(sourceWord, targetWord, 1);
         }
       }
     }
-    
-    //this.t = Counters.conditionalNormalize(this.t);
+    this.translation = Counters.conditionalNormalize(this.translation);
   }
 
   public void train(List<SentencePair> trainingPairs) {
@@ -63,11 +67,12 @@ public class IBMModel1Aligner extends AbstractAligner {
 
         for (String sourceWord: sourceWords) {
           // sum of t(f|ei), for possible ei
-          double denominator = this.t.getCounter(sourceWord).totalCount();
+          double denominator = 
+            this.translation.getCounter(sourceWord).totalCount();
 
           for (String targetWord: targetWords) {
             double increment = 
-              this.t.getCount(sourceWord, targetWord) / denominator;
+              this.translation.getCount(sourceWord, targetWord) / denominator;
 
             this.sourceTargetCounts.incrementCount(
               sourceWord, 
@@ -80,16 +85,15 @@ public class IBMModel1Aligner extends AbstractAligner {
       }
 
       // update t(source|target) = count(source, target) / count(target)
-      for (String sourceWord: this.t.keySet()) {
-        for (String targetWord: this.t.getCounter(sourceWord).keySet()) {
+      for (String sourceWord: this.translation.keySet()) {
+        for (String targetWord: this.translation.getCounter(sourceWord).keySet()) {
           double normalizedValue = 
             this.sourceTargetCounts.getCount(sourceWord, targetWord) 
             / this.targetCounts.getCount(targetWord);
 
-          this.t.setCount(sourceWord, targetWord, normalizedValue);
+          this.translation.setCount(sourceWord, targetWord, normalizedValue);
         }
       }
     }
   }
-
 }

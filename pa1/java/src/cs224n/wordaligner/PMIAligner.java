@@ -18,6 +18,7 @@ public class PMIAligner extends AbstractAligner {
   private static final long serialVersionUID = 1315751943476440515L;
   
   private CounterMap<String,String> sourceTargetCounts;
+  private CounterMap<String, String> translation;
   private Counter<String> targetCounts;
 
   public Alignment align(SentencePair pair) {
@@ -28,49 +29,37 @@ public class PMIAligner extends AbstractAligner {
       double maxProb = 0;
       for (int t = 0; t < pair.getTargetWords().size(); t++) {
         String targetWord = pair.getTargetWords().get(t);
-        double targetProb = this.targetCounts.getCount(targetWord);
-        if (targetProb == 0) 
-          continue;
-        double currProb = 
-          this.sourceTargetCounts.getCount(sourceWord, targetWord) / targetProb;
-        if (currProb > maxProb) {
-          maxProb = currProb;
+        if (this.translation.getCount(sourceWord, targetWord) > maxProb) {
+          maxProb = this.translation.getCount(sourceWord, targetWord);
           maxIndex = t;
         }
       }
-      // index??
-      alignment.addPredictedAlignment(s, maxIndex);
-      if (maxIndex == 0) System.out.println("Get aligned to NULL");
+      alignment.addPredictedAlignment(maxIndex, s);
     }
     return alignment;
   }
 
-  protected CounterMap<String, String> computeSourceTargetCounts(
-    List<SentencePair> trainingPairs
-  ) {
-    CounterMap<String, String> counter = new CounterMap<String, String>();
-    for (SentencePair pair: trainingPairs) {
-      for (String sourceWord: pair.getSourceWords()) {
-        for (String targetWord: pair.getTargetWords()) {
-          counter.incrementCount(sourceWord, targetWord, 1);
+  public void train(List<SentencePair> trainingPairs) {
+    this.sourceTargetCounts = new CounterMap<String, String>();
+    this.translation = new CounterMap<String, String>();
+    this.targetCounts = new Counter<String>();
+    for (SentencePair pair: trainingPairs) { 
+      this.addNullToTargetWords(pair);    
+      for (String targetWord: pair.getTargetWords()) {
+        this.targetCounts.incrementCount(targetWord, 1);
+        for (String sourceWord: pair.getSourceWords()) {
+          this.sourceTargetCounts.incrementCount(sourceWord, targetWord, 1);
         }
       }
     }
-    return Counters.conditionalNormalize(counter);
-  }
 
-  protected Counter<String> computeTargetCounts(List<SentencePair> trainingPairs) {
-    Counter<String> counter = new Counter<String>();
-    for (SentencePair pair: trainingPairs) {
-      for (String targetWord : pair.getTargetWords()) {
-        counter.incrementCount(targetWord, 1);
+    for (String sourceWord: this.sourceTargetCounts.keySet()) {
+      for (String targetWord: this.sourceTargetCounts.getCounter(sourceWord).keySet()) {
+        double prob = 
+          this.sourceTargetCounts.getCount(sourceWord, targetWord) 
+          / this.targetCounts.getCount(targetWord);
+        this.translation.setCount(sourceWord, targetWord, prob);
       }
     }
-    return Counters.normalize(counter);
-  }
-  
-  public void train(List<SentencePair> trainingPairs) {
-    this.sourceTargetCounts = this.computeSourceTargetCounts(trainingPairs);
-    this.targetCounts = this.computeTargetCounts(trainingPairs);
   }
 }
