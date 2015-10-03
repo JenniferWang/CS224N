@@ -15,7 +15,7 @@ public class SentencePair {
   String sourceFile;
   List<String> targetWords;
   List<String> sourceWords;
-
+  
   public int getSentenceID() {
     return sentenceID;
   }

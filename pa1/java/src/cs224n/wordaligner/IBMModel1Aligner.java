@@ -18,9 +18,11 @@ public class IBMModel1Aligner extends AbstractAligner {
   private static final long serialVersionUID = 1315751943476440515L;
   private static final int maxIteration = 25; // Should be large enough
   
-  private CounterMap<String, String> sourceTargetCounts;
-  private Counter<String> targetCounts;
-  private CounterMap<String, String> translation; /*source-to-target*/
+  private CounterMap<String, String> translation;
+
+  public CounterMap<String, String> getTranslation() {
+    return this.translation;
+  }
 
   public Alignment align(SentencePair pair) {
     Alignment alignment = new Alignment();
@@ -59,27 +61,22 @@ public class IBMModel1Aligner extends AbstractAligner {
     this.init(trainingPairs);
     for (int iter = 0; iter < maxIteration; iter++) {
       // Set all counts to zero
-      this.sourceTargetCounts = new CounterMap<String, String>();
-      this.targetCounts = new Counter<String>();
+      CounterMap<String, String> sourceTargetCounts = new CounterMap<String, String>();
+      Counter<String> targetCounts = new Counter<String>();
       for (SentencePair pair: trainingPairs) {
         List<String> sourceWords = pair.getSourceWords();
         List<String> targetWords = pair.getTargetWords();
 
         for (String sourceWord: sourceWords) {
           // sum of t(f|ei), for possible ei
-          double denominator = 
-            this.translation.getCounter(sourceWord).totalCount();
+          double denominator = this.translation.getCounter(sourceWord).totalCount();
 
           for (String targetWord: targetWords) {
             double increment = 
               this.translation.getCount(sourceWord, targetWord) / denominator;
 
-            this.sourceTargetCounts.incrementCount(
-              sourceWord, 
-              targetWord,
-              increment
-            );
-            this.targetCounts.incrementCount(targetWord, increment);
+            sourceTargetCounts.incrementCount(sourceWord, targetWord, increment);
+            targetCounts.incrementCount(targetWord, increment);
           }
         }
       }
@@ -88,8 +85,7 @@ public class IBMModel1Aligner extends AbstractAligner {
       for (String sourceWord: this.translation.keySet()) {
         for (String targetWord: this.translation.getCounter(sourceWord).keySet()) {
           double normalizedValue = 
-            this.sourceTargetCounts.getCount(sourceWord, targetWord) 
-            / this.targetCounts.getCount(targetWord);
+            sourceTargetCounts.getCount(sourceWord, targetWord) / targetCounts.getCount(targetWord);
 
           this.translation.setCount(sourceWord, targetWord, normalizedValue);
         }
