@@ -2,7 +2,7 @@
 |               | French-English| Hindi-English | Chinese-English |
 | ------------- |:-------------:| -------------:|----------------:|
 | PMIAligner    | 0.68            |    0.84           |   0.85       |
-| IBM Model1    | 0.42          |               |                 |
+| IBM Model1    | 0.39          |               |                 |
 | IBM Model2    | 0.36          |               |                 |
 
 ## Results (test set)
