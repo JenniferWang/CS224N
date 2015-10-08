@@ -106,6 +106,8 @@ public class IBMModel1Aligner extends AbstractAligner {
           this.translation.setCount(sourceWord, targetWord, normalizedValue);
         }
       }
+    long endTime   = System.currentTimeMillis();
+    System.out.println("use " + (endTime - startTime));
     }
   }
 
