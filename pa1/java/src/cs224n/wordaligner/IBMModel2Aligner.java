@@ -49,7 +49,7 @@ public class IBMModel2Aligner extends AbstractAligner {
     String mlPairKey = convertToString(m, l);
     
     for (int s = 0; s < m; s++) {
-      int maxIndex = 0;
+      int maxIndex = l - 1; // As we append NULL to the end of the sentence
       double maxProb = 0;
       String sourceWord = pair.getSourceWords().get(s);
       String sourcePosKey = convertToString(s);
@@ -57,6 +57,8 @@ public class IBMModel2Aligner extends AbstractAligner {
       for (int t = 0; t < l; t++) {
         String targetWord = pair.getTargetWords().get(t);
         String targetPosKey = convertToString(t);
+        if (this.q.get(mlPairKey) == null)
+          break;
         double currProb = 
           this.q.get(mlPairKey).getCount(sourcePosKey, targetPosKey)
           * this.t.getCount(sourceWord, targetWord);

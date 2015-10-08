@@ -2,6 +2,13 @@ package cs224n.wordaligner;
 
 import cs224n.util.*;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Simple word alignment baseline model that maps source positions to target 
@@ -18,6 +25,9 @@ public class IBMModel1Aligner extends AbstractAligner {
   private static final long serialVersionUID = 1315751943476440515L;
   private static final int maxIteration = 5; // Should be large enough
   private static final int maxTrainingPairs = 20000;
+  private static final Lock sourceTargetLock = new ReentrantLock();
+  private static final Lock targetLock = new ReentrantLock();
+  private static final int numThreads = 4; // Corn has 4 cores
 
   private CounterMap<String, String> translation;
 
@@ -62,27 +72,30 @@ public class IBMModel1Aligner extends AbstractAligner {
     trainingPairs = trainingPairs.subList(0, Math.min(maxTrainingPairs, trainingPairs.size()));
     this.init(trainingPairs);
     for (int iter = 0; iter < maxIteration; iter++) {
-      System.out.println("IBM1 Begin iteration " + iter);
       // Set all counts to zero
       CounterMap<String, String> sourceTargetCounts = new CounterMap<String, String>();
       Counter<String> targetCounts = new Counter<String>();
-      for (SentencePair pair: trainingPairs) {
-        List<String> sourceWords = pair.getSourceWords();
-        List<String> targetWords = pair.getTargetWords();
+      ExecutorService service = Executors.newFixedThreadPool(numThreads);
+      List<Future<Runnable>> futures = new ArrayList<Future<Runnable>>();
 
-        for (String sourceWord: sourceWords) {
-          // sum of t(f|ei), for possible ei
-          double denominator = this.translation.getCounter(sourceWord).totalCount();
+      for (int i = 0; i < trainingPairs.size(); i++) {
+        Future f = service.submit(new IBM1TrainThread(
+          trainingPairs.get(i),
+          sourceTargetCounts, 
+          targetCounts, 
+          this.translation
+        ));
+        futures.add(f);
+      }
 
-          for (String targetWord: targetWords) {
-            double increment = 
-              this.translation.getCount(sourceWord, targetWord) / denominator;
-
-            sourceTargetCounts.incrementCount(sourceWord, targetWord, increment);
-            targetCounts.incrementCount(targetWord, increment);
-          }
+      for (Future<Runnable> f : futures) {
+        try {
+          f.get();
+        } catch (ExecutionException e) {
+        } catch (InterruptedException e) {
         }
       }
+      service.shutdownNow();
 
       // update t(source|target) = count(source, target) / count(target)
       for (String sourceWord: this.translation.keySet()) {
@@ -95,4 +108,51 @@ public class IBMModel1Aligner extends AbstractAligner {
       }
     }
   }
+
+  public class IBM1TrainThread implements Runnable {
+
+    private SentencePair pair = null;
+    private CounterMap<String, String> sourceTargetCounts = null;
+    private Counter<String> targetCounts = null;
+    private CounterMap<String, String> translation = null;
+
+    public IBM1TrainThread(
+      SentencePair pair, 
+      CounterMap<String, String> sourceTargetCounts,
+      Counter<String> targetCounts,
+      CounterMap<String, String> translation
+    ) {
+      this.pair = pair;
+      this.sourceTargetCounts = sourceTargetCounts;
+      this.targetCounts = targetCounts;
+      this.translation = translation;
+    }
+
+    public void run(){
+      List<String> sourceWords = this.pair.getSourceWords();
+      List<String> targetWords = this.pair.getTargetWords();
+      for (String sourceWord: sourceWords) {
+        // sum of t(f|ei), for possible ei
+        double denominator = this.translation.getCounter(sourceWord).totalCount();
+
+        for (String targetWord: targetWords) {
+          double increment = 
+            this.translation.getCount(sourceWord, targetWord) / denominator;
+
+          sourceTargetLock.lock();
+          this.sourceTargetCounts.incrementCount(
+            sourceWord, 
+            targetWord, 
+            increment
+          );
+          sourceTargetLock.unlock();
+
+          targetLock.lock();
+          this.targetCounts.incrementCount(targetWord, increment);
+          targetLock.unlock();
+        }
+      }
+    }
+  }
+
 }
