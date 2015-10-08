@@ -16,8 +16,9 @@ import java.util.List;
 public class IBMModel1Aligner extends AbstractAligner {
 
   private static final long serialVersionUID = 1315751943476440515L;
-  private static final int maxIteration = 25; // Should be large enough
-  
+  private static final int maxIteration = 5; // Should be large enough
+  private static final int maxTrainingPairs = 20000;
+
   private CounterMap<String, String> translation;
 
   public CounterMap<String, String> getTranslation() {
@@ -58,8 +59,10 @@ public class IBMModel1Aligner extends AbstractAligner {
   }
 
   public void train(List<SentencePair> trainingPairs) {
+    trainingPairs = trainingPairs.subList(0, Math.min(maxTrainingPairs, trainingPairs.size()));
     this.init(trainingPairs);
     for (int iter = 0; iter < maxIteration; iter++) {
+      System.out.println("IBM1 Begin iteration " + iter);
       // Set all counts to zero
       CounterMap<String, String> sourceTargetCounts = new CounterMap<String, String>();
       Counter<String> targetCounts = new Counter<String>();
