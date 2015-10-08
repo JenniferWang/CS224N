@@ -187,3 +187,26 @@ Begin iteration 9
 Precision:	0.4431
 Recall:	0.4431
 AER:	0.5569
+/// CS224n Word Alignment Tester ///
+Language: french
+Data path: /afs/ir/class/cs224n/data/pa1//french
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 1130104
+Evaluation set size: 111
+Model: cs224n.wordaligner.IBMModel2Aligner
+IBM1 Begin iteration 0
+IBM1 Begin iteration 1
+IBM1 Begin iteration 2
+IBM1 Begin iteration 3
+IBM1 Begin iteration 4
+IBM2 Begin iteration 0
+IBM2 Begin iteration 1
+IBM2 Begin iteration 2
+IBM2 Begin iteration 3
+IBM2 Begin iteration 4
+
+### Evaluation Results ###
+Precision:	0.6294
+Recall:	0.7573
+AER:	0.3240
