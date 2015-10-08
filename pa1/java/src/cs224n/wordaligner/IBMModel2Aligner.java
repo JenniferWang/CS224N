@@ -108,7 +108,6 @@ public class IBMModel2Aligner extends AbstractAligner {
     this.init(trainingPairs);
     trainingPairs = trainingPairs.subList(0, Math.min(maxTrainingPairs, trainingPairs.size()));
     for (int iter = 0; iter < maxIteration; iter++) {
-      System.out.println("IBM2 Begin iteration " + iter);
       CounterMap<String, String> sourceTargetCounts = new CounterMap<String,String>();
       CounterMap<String, String> sourcePosCounts = new CounterMap<String, String>();
       HashMap<String, CounterMap<String, String>> sourceTargetPosCounts = 
