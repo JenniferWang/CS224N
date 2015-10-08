@@ -73,6 +73,7 @@ public class IBMModel1Aligner extends AbstractAligner {
     this.init(trainingPairs);
     for (int iter = 0; iter < maxIteration; iter++) {
       // Set all counts to zero
+      // long startTime = System.currentTimeMillis();
       CounterMap<String, String> sourceTargetCounts = new CounterMap<String, String>();
       Counter<String> targetCounts = new Counter<String>();
       ExecutorService service = Executors.newFixedThreadPool(numThreads);
@@ -106,8 +107,8 @@ public class IBMModel1Aligner extends AbstractAligner {
           this.translation.setCount(sourceWord, targetWord, normalizedValue);
         }
       }
-    long endTime   = System.currentTimeMillis();
-    System.out.println("use " + (endTime - startTime));
+      // long endTime   = System.currentTimeMillis();
+      // System.out.println("use " + (endTime - startTime));
     }
   }
 
