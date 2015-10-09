@@ -17,7 +17,8 @@ import java.util.HashMap;
 public class IBMModel2Aligner extends AbstractAligner {
 
   private static final long serialVersionUID = 1315751943476440515L;
-  private static final int maxIteration = 25; // Should be large enough
+  private static final int maxIteration = 5; // Should be large enough
+  private static final int maxTrainingPairs = 20000;
 
   /*
    * q(targetPos | sourcePos, length(source), length(target))
@@ -48,7 +49,7 @@ public class IBMModel2Aligner extends AbstractAligner {
     String mlPairKey = convertToString(m, l);
     
     for (int s = 0; s < m; s++) {
-      int maxIndex = 0;
+      int maxIndex = l - 1; // As we append NULL to the end of the sentence
       double maxProb = 0;
       String sourceWord = pair.getSourceWords().get(s);
       String sourcePosKey = convertToString(s);
@@ -56,6 +57,8 @@ public class IBMModel2Aligner extends AbstractAligner {
       for (int t = 0; t < l; t++) {
         String targetWord = pair.getTargetWords().get(t);
         String targetPosKey = convertToString(t);
+        if (this.q.get(mlPairKey) == null)
+          break;
         double currProb = 
           this.q.get(mlPairKey).getCount(sourcePosKey, targetPosKey)
           * this.t.getCount(sourceWord, targetWord);
@@ -72,11 +75,11 @@ public class IBMModel2Aligner extends AbstractAligner {
 
   protected void init(List<SentencePair> trainingPairs) {
     IBMModel1Aligner model1 = new IBMModel1Aligner();
+    trainingPairs = trainingPairs.subList(0, Math.min(maxTrainingPairs, trainingPairs.size()));
     model1.train(trainingPairs);
 
     this.t = model1.getTranslation();
     this.q = new HashMap<String, CounterMap<String, String>>();
-
     for (SentencePair pair: trainingPairs) {
       int l = pair.getTargetWords().size();
       int m = pair.getSourceWords().size();
@@ -103,6 +106,7 @@ public class IBMModel2Aligner extends AbstractAligner {
 
   public void train(List<SentencePair> trainingPairs) {
     this.init(trainingPairs);
+    trainingPairs = trainingPairs.subList(0, Math.min(maxTrainingPairs, trainingPairs.size()));
     for (int iter = 0; iter < maxIteration; iter++) {
       CounterMap<String, String> sourceTargetCounts = new CounterMap<String,String>();
       CounterMap<String, String> sourcePosCounts = new CounterMap<String, String>();

@@ -1,0 +1,212 @@
+/// CS224n Word Alignment Tester ///
+Language: french
+Data path: /afs/ir/class/cs224n/data/pa1//french
+Evaluation set: dev
+Using up to 10000 training sentences.
+Training set size: 10000
+Evaluation set size: 37
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+Begin iteration 5
+Begin iteration 6
+Begin iteration 7
+Begin iteration 8
+Begin iteration 9
+
+### Evaluation Results ###
+Precision:	0.5257
+Recall:	0.7071
+AER:	0.4164
+/// CS224n Word Alignment Tester ///
+Language: french
+Data path: /afs/ir/class/cs224n/data/pa1//french
+Evaluation set: dev
+Using up to 10000 training sentences.
+Training set size: 10000
+Evaluation set size: 37
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+
+/// CS224n Word Alignment Tester ///
+Language: french
+Data path: /afs/ir/class/cs224n/data/pa1//french
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 1130104
+Evaluation set size: 111
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+/// CS224n Word Alignment Tester ///
+Language: hindi
+Data path: /afs/ir/class/cs224n/data/pa1//hindi
+Evaluation set: dev
+Using up to 10000 training sentences.
+Training set size: 3441
+Evaluation set size: 25
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+
+### Evaluation Results ###
+Precision:	0.4460
+Recall:	0.3859
+AER:	0.5862
+/// CS224n Word Alignment Tester ///
+Language: french
+Data path: /afs/ir/class/cs224n/data/pa1//french
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 1130104
+Evaluation set size: 111
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+Begin iteration 5
+Begin iteration 6
+Begin iteration 7
+Begin iteration 8
+Begin iteration 9
+
+### Evaluation Results ###
+Precision:	0.5759
+Recall:	0.7432
+AER:	0.3631
+/// CS224n Word Alignment Tester ///
+Language: hindi
+Data path: /afs/ir/class/cs224n/data/pa1//hindi
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 3441
+Evaluation set size: 22
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+Begin iteration 5
+Begin iteration 6
+Begin iteration 7
+Begin iteration 8
+Begin iteration 9
+
+### Evaluation Results ###
+Precision:	0.4373
+Recall:	0.4373
+AER:	0.5627
+/// CS224n Word Alignment Tester ///
+Language: hindi
+Data path: /afs/ir/class/cs224n/data/pa1//hindi
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 3441
+Evaluation set size: 22
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+Begin iteration 5
+Begin iteration 6
+Begin iteration 7
+Begin iteration 8
+Begin iteration 9
+Begin iteration 10
+Begin iteration 11
+Begin iteration 12
+Begin iteration 13
+Begin iteration 14
+Begin iteration 15
+Begin iteration 16
+Begin iteration 17
+Begin iteration 18
+Begin iteration 19
+
+### Evaluation Results ###
+Precision:	0.4344
+Recall:	0.4344
+AER:	0.5656
+/// CS224n Word Alignment Tester ///
+Language: chinese
+Data path: /afs/ir/class/cs224n/data/pa1//chinese
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 100000
+Evaluation set size: 977
+Model: cs224n.wordaligner.IBMModel1Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+Begin iteration 5
+Begin iteration 6
+Begin iteration 7
+Begin iteration 8
+Begin iteration 9
+
+### Evaluation Results ###
+Precision:	0.4386
+Recall:	0.3109
+AER:	0.6361
+/// CS224n Word Alignment Tester ///
+Language: hindi
+Data path: /afs/ir/class/cs224n/data/pa1//hindi
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 3441
+Evaluation set size: 22
+Model: cs224n.wordaligner.IBMModel2Aligner
+Begin iteration 0
+Begin iteration 1
+Begin iteration 2
+Begin iteration 3
+Begin iteration 4
+Begin iteration 5
+Begin iteration 6
+Begin iteration 7
+Begin iteration 8
+Begin iteration 9
+
+### Evaluation Results ###
+Precision:	0.4431
+Recall:	0.4431
+AER:	0.5569
+/// CS224n Word Alignment Tester ///
+Language: french
+Data path: /afs/ir/class/cs224n/data/pa1//french
+Evaluation set: test
+Using up to 2147483647 training sentences.
+Training set size: 1130104
+Evaluation set size: 111
+Model: cs224n.wordaligner.IBMModel2Aligner
+IBM1 Begin iteration 0
+IBM1 Begin iteration 1
+IBM1 Begin iteration 2
+IBM1 Begin iteration 3
+IBM1 Begin iteration 4
+IBM2 Begin iteration 0
+IBM2 Begin iteration 1
+IBM2 Begin iteration 2
+IBM2 Begin iteration 3
+IBM2 Begin iteration 4
+
+### Evaluation Results ###
+Precision:	0.6294
+Recall:	0.7573
+AER:	0.3240
