@@ -22,3 +22,5 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export CLASSPATH="${CORENLP}/*:${PHRASAL}/*:${PHRASAL}/lib/*:${BASEDIR}/java/classes"
 export PATH=${PATH}:${PHRASAL}/scripts
 
+export SOURCE=~/cs224n/pa1-mt/java/src/cs224n
+export SYSTEM=~/cs224n/pa1-mt/system

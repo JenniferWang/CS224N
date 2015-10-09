@@ -13,7 +13,7 @@ import java.lang.Math;
 /**
  * A rule featurizer.
  */
-public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
+public class STDiff implements RuleFeaturizer<IString, String> {
   
   @Override
   public void initialize() {
@@ -28,10 +28,11 @@ public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
     // with your own feature.
     List<FeatureValue<String>> features = Generics.newLinkedList();
     
-		int size = f.targetPhrase.size();
+		int tsize = f.targetPhrase.size();
+		int ssize = f.sourcePhrase.size();
 
     features.add(new FeatureValue<String>(
-			String.format("%s:%d", "TGTD", size), (size == 2 || size == 3) ? 1 : 0));
+			"STDiff", Math.abs (tsize - ssize)));
 
     return features;
   }

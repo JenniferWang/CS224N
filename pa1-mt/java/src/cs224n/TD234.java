@@ -13,7 +13,7 @@ import java.lang.Math;
 /**
  * A rule featurizer.
  */
-public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
+public class TD234 implements RuleFeaturizer<IString, String> {
   
   @Override
   public void initialize() {
@@ -31,7 +31,7 @@ public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
 		int size = f.targetPhrase.size();
 
     features.add(new FeatureValue<String>(
-			String.format("%s:%d", "TGTD", size), (size == 2 || size == 3) ? 1 : 0));
+			"TD", (size == 2 || size == 3 || size == 4) ? 1 : 0));
 
     return features;
   }

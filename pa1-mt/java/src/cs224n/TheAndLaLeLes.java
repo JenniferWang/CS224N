@@ -13,7 +13,7 @@ import java.lang.Math;
 /**
  * A rule featurizer.
  */
-public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
+public class TheAndLaLeLes implements RuleFeaturizer<IString, String> {
   
   @Override
   public void initialize() {
@@ -27,11 +27,15 @@ public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
     // TODO: Return a list of features for the rule. Replace these lines
     // with your own feature.
     List<FeatureValue<String>> features = Generics.newLinkedList();
-    
-		int size = f.targetPhrase.size();
+
+    boolean theInTarget = f.sourcePhrase.toString().contains("the");
+		boolean lalelesInSource = f.targetPhrase.toString().contains("la") ||
+													f.targetPhrase.toString().contains("le") ||
+													f.targetPhrase.toString().contains("les");
+
 
     features.add(new FeatureValue<String>(
-			String.format("%s:%d", "TGTD", size), (size == 2 || size == 3) ? 1 : 0));
+			"TheAndLaLeLes", (theInTarget == lalelesInSource) ? 1 : 0));
 
     return features;
   }

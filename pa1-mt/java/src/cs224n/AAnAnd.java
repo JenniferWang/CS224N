@@ -13,7 +13,7 @@ import java.lang.Math;
 /**
  * A rule featurizer.
  */
-public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
+public class AAnAnd implements RuleFeaturizer<IString, String> {
   
   @Override
   public void initialize() {
@@ -27,11 +27,16 @@ public class TargetRuleDimension implements RuleFeaturizer<IString, String> {
     // TODO: Return a list of features for the rule. Replace these lines
     // with your own feature.
     List<FeatureValue<String>> features = Generics.newLinkedList();
-    
-		int size = f.targetPhrase.size();
+
+    boolean inTarget = f.sourcePhrase.toString().contains("a") ||
+													f.sourcePhrase.toString().contains("an") ||
+													f.sourcePhrase.toString().contains("one");
+		boolean inSource = f.targetPhrase.toString().contains("un") ||
+													f.targetPhrase.toString().contains("une");
+
 
     features.add(new FeatureValue<String>(
-			String.format("%s:%d", "TGTD", size), (size == 2 || size == 3) ? 1 : 0));
+			"AAnAnd", (inTarget == inSource) ? 1 : 0));
 
     return features;
   }
