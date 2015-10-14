@@ -1,0 +1,5 @@
+/// CS224n Word Alignment Tester ///
+Language: french
+Data path: /afs/ir/class/cs224n/pa1/data//french
+Evaluation set: dev
+Using up to 2147483647 training sentences.
