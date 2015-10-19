@@ -22,12 +22,48 @@ public class TreeAnnotations {
 
 		// TODO: change the annotation from a lossless binarization to a
 		// finite-order markov process (try at least 1st and 2nd order)
-
+		Tree<String> binarizedTree = firstOrderBinarizeTree(unAnnotatedTree);
 		// TODO : mark nodes with the label of their parent nodes, giving a second
 		// order vertical markov process
+		// System.out.println("Original Tree");
+		// System.out.println(Trees.PennTreeRenderer.render(unAnnotatedTree));
+		// System.out.println("Annotated Tree");
+		// System.out.println(Trees.PennTreeRenderer.render(binarizedTree));
+		return binarizedTree;
 
-		return binarizeTree(unAnnotatedTree);
+	}
 
+	private static Tree<String> firstOrderBinarizeTree(Tree<String> tree) {
+		String label = tree.getLabel();
+		if (tree.isLeaf()) 
+			return new Tree<String>(label);
+
+		if (tree.getChildren().size() == 1) {
+			return new Tree<String>( 
+				label, 
+				Collections.singletonList(firstOrderBinarizeTree(tree.getChildren().get(0)))
+			);
+		}
+		// otherwise, it's a binary-or-more local tree
+		Tree<String> newNode = new Tree<String>(label);
+		List<Tree<String>> newChildren = new ArrayList<Tree<String>>();
+
+		Tree<String> newLeftTree = 
+			firstOrderBinarizeTree(tree.getChildren().get(0));
+
+		String[] parentLabels = label.split("_");
+		String newRightLabel = 
+			"@"+ parentLabels[parentLabels.length - 1] + "->" 
+			+ "_" + newLeftTree.getLabel();
+
+		newChildren.add(newLeftTree);
+		newChildren.add(firstOrderBinarizeTree(new Tree<String>(
+			newRightLabel, 
+			tree.getChildren().subList(1, tree.getChildren().size())
+		)));
+
+		newNode.setChildren(newChildren);
+		return newNode;
 	}
 
 	private static Tree<String> binarizeTree(Tree<String> tree) {
@@ -35,9 +71,10 @@ public class TreeAnnotations {
 		if (tree.isLeaf())
 			return new Tree<String>(label);
 		if (tree.getChildren().size() == 1) {
-			return new Tree<String>
-			(label, 
-					Collections.singletonList(binarizeTree(tree.getChildren().get(0))));
+			return new Tree<String>( 
+				label, 
+				Collections.singletonList(binarizeTree(tree.getChildren().get(0)))
+			);
 		}
 		// otherwise, it's a binary-or-more local tree, 
 		// so decompose it into a sequence of binary and unary trees.
