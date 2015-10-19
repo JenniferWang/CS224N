@@ -15,10 +15,10 @@ public class PCFGParser implements Parser {
     // TODO: before you generate your grammar, the training trees
     // need to be binarized so that rules are at most binary
     List<Tree<String>> binarizedTrees = new ArrayList<Tree<String>>();
-    for (int t = 0; t < trainTrees.size(); t++) {
-      System.out.println(Trees.PennTreeRenderer.render(trainTrees.get(t)));
-      System.out.println(Trees.PennTreeRenderer.render(TreeAnnotations.annotateTree(trainTrees.get(t))));
-    }
+    // for (int t = 0; t < trainTrees.size(); t++) {
+    //   System.out.println(Trees.PennTreeRenderer.render(trainTrees.get(t)));
+    //   System.out.println(Trees.PennTreeRenderer.render(TreeAnnotations.annotateTree(trainTrees.get(t))));
+    // }
 
     // Binarize tree
     for (int t = 0; t < trainTrees.size(); t++) {
@@ -27,7 +27,7 @@ public class PCFGParser implements Parser {
     lexicon = new Lexicon(binarizedTrees);
     grammar = new Grammar(binarizedTrees);
 
-    System.out.println("Grammar is " + grammar);
+    // System.out.println("Grammar is " + grammar);
   }
 
   public Tree<String> getBestParse(List<String> sentence) {
@@ -38,7 +38,8 @@ public class PCFGParser implements Parser {
     buildProbTable(probTable, bestTag, sentence);
 
     Tree<String> tree = buildTree(bestTag, sentence, "ROOT", 0, sentence.size());
-    System.out.println(Trees.PennTreeRenderer.render(tree));
+    // System.out.println(Trees.PennTreeRenderer.render(tree));
+    // System.out.println(bestTag);
     return TreeAnnotations.unAnnotateTree(tree);
   }
 
@@ -58,18 +59,16 @@ public class PCFGParser implements Parser {
 
     String[] childTags = tagInfo.getChildTags();
     if (tagInfo.getSplit() == null) {
-      if (tagInfo.getChildTags() == null) {
-        tree.setWords(sentence.subList(begin, end));
-        return tree;
+      if (childTags.length == 0) {
+        for(String word: sentence.subList(begin, end)) {
+          childTrees.add(new Tree<String>(word));
+        }
       } else {
-        assert childTags.length == 1;
-        // System.out.println("HERE!!!!! " + childTags + childTags[0]);
         childTrees.add(
           buildTree(bestTag, sentence, childTags[0], begin, end)
         );
       }
     } else {
-      assert childTags.length == 2;
       childTrees.add(
         buildTree(bestTag, sentence, childTags[0], begin, tagInfo.getSplit())
       );
@@ -77,7 +76,13 @@ public class PCFGParser implements Parser {
         buildTree(bestTag, sentence, childTags[1], tagInfo.getSplit(), end)
       );
     }
+
     tree.setChildren(childTrees);
+    // for (Tree<String> childTree: tree.getChildren()) {
+    //   System.out.println("Set up node for tag " + currTag + " with ");
+    //   System.out.println(Trees.PennTreeRenderer.render(childTree));
+    // }
+    // System.out.println("######");
     return tree;
   }
 
@@ -100,29 +105,27 @@ public class PCFGParser implements Parser {
       // handle unary rule
       Boolean added = true;
       while (added) {
-        Map<String, Double> newTagProbs = new HashMap<String, Double>();
+        Set<String> oldTags = new HashSet<String>(tagProbs.keySet());
         added = false;
-        for (String tagB: tagProbs.keySet()) {
+        for (String tagB: oldTags) {
           Double tagBProb = tagProbs.get(tagB);
-          newTagProbs.put(tagB, tagBProb);
           List<Grammar.UnaryRule> rules = grammar.getUnaryRulesByChild(tagB);
           for (Grammar.UnaryRule rule: rules) {
             String tagA = rule.getParent();
             Double prob = tagProbs.get(tagB) * rule.getScore();
             if (!tagProbs.containsKey(tagA) || prob > tagProbs.get(tagA)) {
-              newTagProbs.put(tagA, prob);
+              tagProbs.put(tagA, prob);
               tagInfos.put(tagA, new TagInfo(null, tagB));
               added = true;
             }
           }
         }
-        tagProbs = newTagProbs;
       }
       probTable.put(convertToString(i, i + 1), tagProbs);
       bestTag.put(convertToString(i, i + 1), tagInfos);
     }
-    System.out.println("prob table initilized " + probTable);
-    System.out.println("best tag initilized " + bestTag);
+    // System.out.println("prob table initilized " + probTable);
+    // System.out.println("best tag initilized " + bestTag);
   }
 
   protected void buildProbTable(
@@ -168,7 +171,6 @@ public class PCFGParser implements Parser {
               if (!tagProbs.containsKey(parentTag) ||
                   tagProbs.get(parentTag) < prob) {
                 tagProbs.put(parentTag, prob);
-                System.out.println("HERE!!!!!************\n");
                 tagInfos.put(
                   parentTag,
                   new TagInfo(split, leftTag, rightTag)
@@ -181,11 +183,10 @@ public class PCFGParser implements Parser {
         // handle unary rule
         Boolean added = true;
         while (added) {
-          Map<String, Double> newTagProbs = new HashMap<String, Double>();
+          Set<String> oldTags = new HashSet<String>(tagProbs.keySet());
           added = false;
-          for (String tagB: tagProbs.keySet()) {
+          for (String tagB: oldTags) {
             Double tagBProb = tagProbs.get(tagB);
-            newTagProbs.put(tagB, tagBProb);
 
             List<Grammar.UnaryRule> rules = this.grammar.getUnaryRulesByChild(tagB);
             for (Grammar.UnaryRule rule: rules) {
@@ -193,13 +194,11 @@ public class PCFGParser implements Parser {
               Double prob = tagBProb * rule.getScore();
               if (!tagProbs.containsKey(tagA) || prob > tagProbs.get(tagA)) {
                 added = true;
-                newTagProbs.put(tagA, prob);
-                System.out.println("THERE!!!!!************\n");
+                tagProbs.put(tagA, prob);
                 tagInfos.put(tagA, new TagInfo(null, tagB));
               } 
             }
           }
-          tagProbs = newTagProbs;
         }
         // System.out.println("key is " + convertToString(begin, end));
         // System.out.println("tagProbs is " + tagProbs);
@@ -207,8 +206,8 @@ public class PCFGParser implements Parser {
         bestTag.put(convertToString(begin, end), tagInfos);
       }
     }
-    System.out.println("prob table finished " + probTable);
-    System.out.println("best tag table is " + bestTag);
+    // System.out.println("prob table finished " + probTable);
+    // System.out.println("best tag table is " + bestTag);
   }
 
   protected static String convertToString(int ...key) {
@@ -237,8 +236,8 @@ public class PCFGParser implements Parser {
       for (String tag: this.childTags) {
         tempChildTags += (tag + ",");
       }
-      return "split: " + this.split + ";" 
-        + "child tags: " + tempChildTags + "; \n"; 
+      return " {split: " + this.split + ";" 
+        + "child tags: " + tempChildTags + "} \n"; 
     } 
   }
 }
