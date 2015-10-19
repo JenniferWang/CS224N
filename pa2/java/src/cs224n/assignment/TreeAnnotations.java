@@ -19,22 +19,13 @@ public class TreeAnnotations {
 
 	public static Tree<String> annotateTree(Tree<String> unAnnotatedTree) {
 
-		// Currently, the only annotation done is a lossless binarization
-
-		// TODO: change the annotation from a lossless binarization to a
-		// finite-order markov process (try at least 1st and 2nd order)
-		// Tree<String> binarizedTree = firstOrderBinarizeTree(unAnnotatedTree);
-		// TODO : mark nodes with the label of their parent nodes, giving a second
-		// order vertical markov process
-		//Tree<String> binarizedTree = horizontolMarkovAnnotate(unAnnotatedTree, 2);
 		verticalMarkovAnnotate(unAnnotatedTree, null);
 		Tree<String> binarizedTree = binarizeTree(unAnnotatedTree);
 		horizontolMarkovAnnotate(binarizedTree, 2);
-
-		System.out.println("Original Tree");
-		System.out.println(Trees.PennTreeRenderer.render(unAnnotatedTree));
-		System.out.println("Annotated Tree");
-		System.out.println(Trees.PennTreeRenderer.render(binarizedTree));
+		// System.out.println("Original Tree");
+		// System.out.println(Trees.PennTreeRenderer.render(unAnnotatedTree));
+		// System.out.println("Annotated Tree");
+		// System.out.println(Trees.PennTreeRenderer.render(binarizedTree));
 
 		return binarizedTree;
 	}
@@ -65,12 +56,7 @@ public class TreeAnnotations {
 		for (String l: labels) {
 			if (!l.isEmpty()) parentLabels.add(l);
 		}
-		// System.out.println("**********");
-		// System.out.println(label);
-		// System.out.println("parent label is decomposed to length " + parentLabels.size());
-		// for (String l: parentLabels) {
-		// 	System.out.println(l);
-		// }
+		
 		String prefix = "@"+ parentLabels.get(0) + "->";
 		String postfix = "_" + tree.getChildren().get(0).getLabel();
 		String newRightLabel;

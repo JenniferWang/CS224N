@@ -12,13 +12,9 @@ public class PCFGParser implements Parser {
   private Lexicon lexicon;
 
   public void train(List<Tree<String>> trainTrees) {
-    // TODO: before you generate your grammar, the training trees
+    // before you generate your grammar, the training trees
     // need to be binarized so that rules are at most binary
     List<Tree<String>> binarizedTrees = new ArrayList<Tree<String>>();
-    // for (int t = 0; t < trainTrees.size(); t++) {
-    //   System.out.println(Trees.PennTreeRenderer.render(trainTrees.get(t)));
-    //   System.out.println(Trees.PennTreeRenderer.render(TreeAnnotations.annotateTree(trainTrees.get(t))));
-    // }
 
     // Binarize tree
     for (int t = 0; t < trainTrees.size(); t++) {
@@ -26,8 +22,6 @@ public class PCFGParser implements Parser {
     }
     lexicon = new Lexicon(binarizedTrees);
     grammar = new Grammar(binarizedTrees);
-
-    // System.out.println("Grammar is " + grammar);
   }
 
   public Tree<String> getBestParse(List<String> sentence) {
@@ -38,8 +32,6 @@ public class PCFGParser implements Parser {
     buildProbTable(probTable, bestTag, sentence);
 
     Tree<String> tree = buildTree(bestTag, sentence, "ROOT", 0, sentence.size());
-    // System.out.println(Trees.PennTreeRenderer.render(tree));
-    // System.out.println(bestTag);
     return TreeAnnotations.unAnnotateTree(tree);
   }
 
@@ -78,11 +70,6 @@ public class PCFGParser implements Parser {
     }
 
     tree.setChildren(childTrees);
-    // for (Tree<String> childTree: tree.getChildren()) {
-    //   System.out.println("Set up node for tag " + currTag + " with ");
-    //   System.out.println(Trees.PennTreeRenderer.render(childTree));
-    // }
-    // System.out.println("######");
     return tree;
   }
 
@@ -124,8 +111,6 @@ public class PCFGParser implements Parser {
       probTable.put(convertToString(i, i + 1), tagProbs);
       bestTag.put(convertToString(i, i + 1), tagInfos);
     }
-    // System.out.println("prob table initilized " + probTable);
-    // System.out.println("best tag initilized " + bestTag);
   }
 
   protected void buildProbTable(
@@ -135,7 +120,7 @@ public class PCFGParser implements Parser {
   ) {
     initializeProbTable(probTable, bestTag, sentence);
     int n = sentence.size();
-    // TODO: check
+
     for (int span = 2; span <= n; span++) {
       for (int begin = 0; begin <= n - span; begin++) {
         int end = span + begin;
@@ -144,9 +129,6 @@ public class PCFGParser implements Parser {
         for (int split = begin + 1; split < end; split++) {
           String leftKey = convertToString(begin, split);
           String rightKey = convertToString(split, end);
-          // System.out.println("((((((" + this.probTable.containsKey(leftKey));
-          // System.out.println("Left key is " + leftKey + this.probTable.get(leftKey));
-          // System.out.println("Right key is " + rightKey +  this.probTable.get(rightKey));
           Map<String, Double> leftProbs = probTable.get(leftKey);
           Map<String, Double> rightProbs = probTable.get(rightKey);
           
@@ -154,10 +136,6 @@ public class PCFGParser implements Parser {
             List<Grammar.BinaryRule> rules = 
               this.grammar.getBinaryRulesByLeftChild(leftTag);
             for (Grammar.BinaryRule rule: rules) {
-              // System.out.println("rule left: " + rule.getLeftChild());
-              // System.out.println("rule right: " + rule.getRightChild());
-              // System.out.println("rule parent: " + rule.getParent());
-
               String parentTag = rule.getParent();
               String rightTag = rule.getRightChild();
               if (!rightProbs.containsKey(rightTag)) {
@@ -200,14 +178,10 @@ public class PCFGParser implements Parser {
             }
           }
         }
-        // System.out.println("key is " + convertToString(begin, end));
-        // System.out.println("tagProbs is " + tagProbs);
         probTable.put(convertToString(begin, end), tagProbs);
         bestTag.put(convertToString(begin, end), tagInfos);
       }
     }
-    // System.out.println("prob table finished " + probTable);
-    // System.out.println("best tag table is " + bestTag);
   }
 
   protected static String convertToString(int ...key) {
