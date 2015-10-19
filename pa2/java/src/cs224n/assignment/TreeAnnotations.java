@@ -1,5 +1,6 @@
 package cs224n.assignment;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,7 @@ public class TreeAnnotations {
 		//Tree<String> binarizedTree = horizontolMarkovAnnotate(unAnnotatedTree, 2);
 		verticalMarkovAnnotate(unAnnotatedTree, null);
 		Tree<String> binarizedTree = binarizeTree(unAnnotatedTree);
-
+		horizontolMarkovAnnotate(binarizedTree, 2);
 
 		System.out.println("Original Tree");
 		System.out.println(Trees.PennTreeRenderer.render(unAnnotatedTree));
@@ -55,19 +56,31 @@ public class TreeAnnotations {
 			return;
 
 		if (tree.getChildren().size() == 1) {
+			horizontolMarkovAnnotate(tree.getChildren().get(0), order);
 			return;
 		}
 		// otherwise, it's a binary-or-more local tree
-		String[] parentLabels = label.replaceFirst("^@", "").split("_|->");
-		String prefix = "@"+ parentLabels[0] + "->";
+		String[] labels = label.split("@|_|->");
+		List<String> parentLabels = new ArrayList<String>();
+		for (String l: labels) {
+			if (!l.isEmpty()) parentLabels.add(l);
+		}
+		// System.out.println("**********");
+		// System.out.println(label);
+		// System.out.println("parent label is decomposed to length " + parentLabels.size());
+		// for (String l: parentLabels) {
+		// 	System.out.println(l);
+		// }
+		String prefix = "@"+ parentLabels.get(0) + "->";
 		String postfix = "_" + tree.getChildren().get(0).getLabel();
 		String newRightLabel;
 		if (order == 1) {
 			newRightLabel = prefix + postfix;
 		} else {
-			String secondParent = parentLabels.length > 1 
-				? "_" + tree.getChildren().get(1).getLabel()
+			String secondParent = parentLabels.size() > 1 
+				? "_" + parentLabels.get(1)
 				: "";
+
 			newRightLabel = prefix + secondParent + postfix;
 		}
 		tree.getChildren().get(1).setLabel(newRightLabel);
