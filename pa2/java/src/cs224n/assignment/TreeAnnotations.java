@@ -22,48 +22,57 @@ public class TreeAnnotations {
 
 		// TODO: change the annotation from a lossless binarization to a
 		// finite-order markov process (try at least 1st and 2nd order)
-		Tree<String> binarizedTree = firstOrderBinarizeTree(unAnnotatedTree);
+		// Tree<String> binarizedTree = firstOrderBinarizeTree(unAnnotatedTree);
 		// TODO : mark nodes with the label of their parent nodes, giving a second
 		// order vertical markov process
-		// System.out.println("Original Tree");
-		// System.out.println(Trees.PennTreeRenderer.render(unAnnotatedTree));
-		// System.out.println("Annotated Tree");
-		// System.out.println(Trees.PennTreeRenderer.render(binarizedTree));
-		return binarizedTree;
+		//Tree<String> binarizedTree = horizontolMarkovAnnotate(unAnnotatedTree, 2);
+		verticalMarkovAnnotate(unAnnotatedTree, null);
+		Tree<String> binarizedTree = binarizeTree(unAnnotatedTree);
 
+
+		System.out.println("Original Tree");
+		System.out.println(Trees.PennTreeRenderer.render(unAnnotatedTree));
+		System.out.println("Annotated Tree");
+		System.out.println(Trees.PennTreeRenderer.render(binarizedTree));
+
+		return binarizedTree;
 	}
 
-	private static Tree<String> firstOrderBinarizeTree(Tree<String> tree) {
+	private static void verticalMarkovAnnotate(Tree<String> tree, String parent) {
+		if (tree.isLeaf() || tree.isPreTerminal()) return;
+		String label = tree.getLabel();
+		for (Tree<String> child: tree.getChildren()) {
+			verticalMarkovAnnotate(child, label);
+		}
+		if (parent != null) {
+			tree.setLabel(label + "^" + parent);
+		}
+	}
+
+	private static void horizontolMarkovAnnotate(Tree<String> tree, int order) {
 		String label = tree.getLabel();
 		if (tree.isLeaf()) 
-			return new Tree<String>(label);
+			return;
 
 		if (tree.getChildren().size() == 1) {
-			return new Tree<String>( 
-				label, 
-				Collections.singletonList(firstOrderBinarizeTree(tree.getChildren().get(0)))
-			);
+			return;
 		}
 		// otherwise, it's a binary-or-more local tree
-		Tree<String> newNode = new Tree<String>(label);
-		List<Tree<String>> newChildren = new ArrayList<Tree<String>>();
-
-		Tree<String> newLeftTree = 
-			firstOrderBinarizeTree(tree.getChildren().get(0));
-
-		String[] parentLabels = label.split("_");
-		String newRightLabel = 
-			"@"+ parentLabels[parentLabels.length - 1] + "->" 
-			+ "_" + newLeftTree.getLabel();
-
-		newChildren.add(newLeftTree);
-		newChildren.add(firstOrderBinarizeTree(new Tree<String>(
-			newRightLabel, 
-			tree.getChildren().subList(1, tree.getChildren().size())
-		)));
-
-		newNode.setChildren(newChildren);
-		return newNode;
+		String[] parentLabels = label.replaceFirst("^@", "").split("_|->");
+		String prefix = "@"+ parentLabels[0] + "->";
+		String postfix = "_" + tree.getChildren().get(0).getLabel();
+		String newRightLabel;
+		if (order == 1) {
+			newRightLabel = prefix + postfix;
+		} else {
+			String secondParent = parentLabels.length > 1 
+				? "_" + tree.getChildren().get(1).getLabel()
+				: "";
+			newRightLabel = prefix + secondParent + postfix;
+		}
+		tree.getChildren().get(1).setLabel(newRightLabel);
+		horizontolMarkovAnnotate(tree.getChildren().get(0), order);
+		horizontolMarkovAnnotate(tree.getChildren().get(1), order);
 	}
 
 	private static Tree<String> binarizeTree(Tree<String> tree) {

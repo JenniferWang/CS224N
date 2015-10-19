@@ -1,0 +1,262 @@
+Guess:
+(ROOT
+  (S
+    (NP
+      (NP (DT Some))
+      (PP (IN of)
+        (NP (DT these) (NNS countries))))
+    (VP (VBP have)
+      (SBAR (IN in)
+        (S
+          (NP (JJ recent) (NNS years))
+          (VP (VBD made)
+            (NP
+              (NP (JJ informal) (NNS agreements))
+              (PP (IN with)
+                (NP (DT the) (NNP U.S.)))
+              (SBAR
+                (WHNP (WDT that))
+                (S
+                  (VP (VBP are)
+                    (ADJP (JJ similar)
+                      (PP (TO to)
+                        (NP (NNS quotas))))))))))))
+    (. .)))
+
+Gold:
+(ROOT
+  (S
+    (NP
+      (NP (DT Some))
+      (PP (IN of)
+        (NP (DT these) (NNS countries))))
+    (VP (VBP have)
+      (PP (IN in)
+        (NP (JJ recent) (NNS years)))
+      (VP (VBD made)
+        (NP
+          (NP (JJ informal) (NNS agreements))
+          (PP (IN with)
+            (NP (DT the) (NNP U.S.)))
+          (SBAR
+            (WHNP (WDT that))
+            (S
+              (VP (VBP are)
+                (ADJP (JJ similar)
+                  (PP (TO to)
+                    (NP (NNS quotas))))))))))
+    (. .)))
+
+ [Current]    P: 90.48   R: 95.00   F1: 92.68   EX:  0.00 
+Guess:
+(ROOT
+  (S (CC But)
+    (NP (PRP$ its) (NN quota))
+    (VP (VBZ has)
+      (VP (VBN been)
+        (NP
+          (NP
+            (QP (RB as) (JJ high) (IN as) (CD 6.9))
+            (NN %))
+          (PP (IN in)
+            (NP (CD 1984))))))
+    (. .)))
+
+Gold:
+(ROOT
+  (S (CC But)
+    (NP (PRP$ its) (NN quota))
+    (VP (VBZ has)
+      (VP (VBN been)
+        (ADJP
+          (ADJP (RB as) (JJ high))
+          (PP (IN as)
+            (NP
+              (NP (CD 6.9) (NN %))
+              (PP (IN in)
+                (NP (CD 1984))))))))
+    (. .)))
+
+ [Current]    P: 66.67   R: 54.55   F1: 60.00   EX:  0.00 
+Guess:
+(ROOT
+  (S
+    (NP (NNP Japan))
+    (, ,)
+    (ADVP (RB however))
+    (, ,)
+    (VP (VBZ has)
+      (VP (VBN agreed)
+        (S
+          (VP (TO to)
+            (VP (VB cut)
+              (NP (PRP$ its) (NN quota))
+              (PP (TO to)
+                (NP
+                  (NP
+                    (QP (RB about) (CD 5))
+                    (NN %))
+                  (PP (IN from)
+                    (NP (CD 5.9) (NN %)))))
+              (ADVP (RB previously)))))))
+    (. .)))
+
+Gold:
+(ROOT
+  (S
+    (NP (NNP Japan))
+    (, ,)
+    (ADVP (RB however))
+    (, ,)
+    (VP (VBZ has)
+      (VP (VBN agreed)
+        (S
+          (VP (TO to)
+            (VP (VB cut)
+              (NP (PRP$ its) (NN quota))
+              (PP (TO to)
+                (NP
+                  (QP (RB about) (CD 5))
+                  (NN %)))
+              (PP (IN from)
+                (NP (CD 5.9) (NN %))
+                (ADVP (RB previously))))))))
+    (. .)))
+
+ [Current]    P: 81.25   R: 86.67   F1: 83.87   EX:  0.00 
+Guess:
+(ROOT
+  (S
+    (NP (DT The) (NN balance))
+    (VP (VBZ is)
+      (VP (VBN supplied)
+        (PP (IN by)
+          (NP
+            (NP (DT a) (NN host))
+            (PP (IN of)
+              (NP (JJR smaller) (NNS exporters)))
+            (, ,)
+            (PP (JJ such) (IN as)
+              (NP (NNP Australia)
+                (CC and)
+                (NNP Venezuela)))))))
+    (. .)))
+
+Gold:
+(ROOT
+  (S
+    (NP (DT The) (NN balance))
+    (VP (VBZ is)
+      (VP (VBN supplied)
+        (PP (IN by)
+          (NP
+            (NP (DT a) (NN host))
+            (PP (IN of)
+              (NP
+                (NP (JJR smaller) (NNS exporters))
+                (, ,)
+                (PP (JJ such) (IN as)
+                  (NP (NNP Australia)
+                    (CC and)
+                    (NNP Venezuela)))))))))
+    (. .)))
+
+ [Current]    P: 90.91   R: 83.33   F1: 86.96   EX:  0.00 
+Guess:
+(ROOT
+  (S
+    (NP (NN Revenue))
+    (VP (VBD totaled)
+      (NP
+        (QP ($ $) (CD 5) (CD million))))
+    (. .)))
+
+Gold:
+(ROOT
+  (S
+    (NP (NN Revenue))
+    (VP (VBD totaled)
+      (NP
+        (QP ($ $) (CD 5) (CD million))))
+    (. .)))
+
+ [Current]    P: 100.00   R: 100.00   F1: 100.00   EX: 100.00 
+Guess:
+(ROOT
+  (S
+    (SBAR (RB Foremost) (IN among)
+      (S
+        (NP (DT those))
+        (VP (VBZ is)
+          (NP
+            (NP
+              (NP (DT the) (NN company) (POS 's))
+              (NN entrance))
+            (PP (IN into)
+              (NP (DT the) (JJ public) (JJ facsimile) (NN business)))))))
+    (, ,)
+    (NP (NNP Mr.) (NNP Pierce))
+    (VP (VBD said))
+    (. .)))
+
+Gold:
+(ROOT
+  (S
+    (SINV
+      (ADJP (RB Foremost))
+      (PP (IN among)
+        (NP (DT those)))
+      (VP (VBZ is))
+      (NP
+        (NP
+          (NP (DT the) (NN company) (POS 's))
+          (NN entrance))
+        (PP (IN into)
+          (NP (DT the) (JJ public) (NN facsimile) (NN business)))))
+    (, ,)
+    (NP (NNP Mr.) (NNP Pierce))
+    (VP (VBD said))
+    (. .)))
+
+ [Current]    P: 75.00   R: 69.23   F1: 72.00   EX:  0.00 
+Guess:
+(ROOT
+  (S
+    (S
+      (NP (NNP Elcotel))
+      (VP (MD will)
+        (VP (VB provide)
+          (NP (DT a) (NN credit-card) (NN reader))
+          (SBAR (IN for)
+            (S
+              (NP (DT the) (NNS machines))
+              (VP (TO to)
+                (VP (VB collect))))))))
+    (, ,)
+    (NP (NN store)
+      (CC and)
+      (RB forward))
+    (VP (VBG billing)
+      (NP (NNS data)))
+    (. .)))
+
+Gold:
+(ROOT
+  (S
+    (NP (NNP Elcotel))
+    (VP (MD will)
+      (VP (VB provide)
+        (NP
+          (NP (DT a) (NN credit-card) (NN reader))
+          (SBAR (IN for)
+            (S
+              (NP (DT the) (NNS machines))
+              (VP (TO to)
+                (VP (VB collect) (, ,) (VB store)
+                  (CC and)
+                  (VB forward)
+                  (NP (NN billing) (NNS data)))))))))
+    (. .)))
+
+ [Current]    P: 28.57   R: 33.33   F1: 30.77   EX:  0.00 
+ [Average]    P: 82.28   R: 79.55   F1: 80.89   EX: 27.10 
