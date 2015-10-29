@@ -1,0 +1,39 @@
+--------------------
+ COREFERENCE TESTER
+--------------------
+Options:
+  -data         dev
+  -model        baseline
+  -documents    100
+  -path         /afs/ir/class/cs224n/data/pa3/
+
+Creating model...done
+Reading documents (lazily)...[/afs/ir/class/cs224n/data/pa3/]...[100 train]...[63 DEV]...done
+----------
+ TRAINING
+----------
+---------
+ TESTING
+---------
+--------------------
+ COREFERENCE SCORES
+--------------------
+--Training--
+    MUC
+MUC Precision: 0.7864906832298136
+MUC Recall:    0.38255287009063443
+MUC F1:        0.5147357723577236
+    B^3
+B^3 Precision: 0.8914532490449796
+B^3 Recall:    0.4157685200816629
+B^3 F1:        0.5670624630510022
+
+--dev--
+    MUC
+MUC Precision: 0.8056140350877193
+MUC Recall:    0.5030674846625767
+MUC F1:        0.6193687618019962
+    B^3
+B^3 Precision: 0.8628232056756321
+B^3 Recall:    0.4489696220708225
+B^3 F1:        0.5906137011461048
