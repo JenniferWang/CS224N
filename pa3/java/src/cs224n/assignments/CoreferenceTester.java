@@ -435,6 +435,9 @@ public class CoreferenceTester<SYS extends CoreferenceSystem> {
       //(enter score)
       Collection<Entity> gold = datum.goldClusters;
       score.enter(datum.document, guess, gold);
+
+      // TODO: delete
+      // System.out.println(doc.debug(guess, gold));
     }
     //--Return
     return score;

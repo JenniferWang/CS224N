@@ -32,9 +32,9 @@ public class BaselineCoreferenceSystem implements CoreferenceSystem{
       //--Print the Document
 //      System.out.println(doc.prettyPrint(clusters));
       //--Iterate over mentions
-      for(Mention m : mentions){
-//        System.out.println(m);
-      }
+      // for(Mention m : mentions){
+      //   System.out.println(m.parse);
+      // }
       //--Iterate Over Coreferent Mention Pairs
       for(Entity e : clusters){
         for(Pair<Mention, Mention> mentionPair : e.orderedMentionPairs()){

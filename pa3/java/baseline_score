@@ -1,20 +1,6 @@
---------------------
- COREFERENCE TESTER
---------------------
-Options:
-  -data         dev
-  -model        baseline
-  -documents    100
-  -path         /afs/ir/class/cs224n/data/pa3/
+Incresing the training set won't change the score becaus it doesn't take advantage of the training set.
 
-Creating model...done
-Reading documents (lazily)...[/afs/ir/class/cs224n/data/pa3/]...[100 train]...[63 DEV]...done
-----------
- TRAINING
-----------
----------
- TESTING
----------
+Result of baseline model for 100 training docs
 --------------------
  COREFERENCE SCORES
 --------------------

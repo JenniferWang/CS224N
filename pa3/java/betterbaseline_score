@@ -1,0 +1,52 @@
+Scores for betterBaseline model on 100 training docs.
+--------------------
+ COREFERENCE SCORES
+--------------------
+--Training--
+    MUC
+MUC Precision: 0.834407872412623
+MUC Recall:    0.9286253776435045
+MUC F1:        0.8789991063449509
+    B^3
+B^3 Precision: 0.6073057830400058
+B^3 Recall:    0.9280364768383564
+B^3 F1:        0.7341710496533297
+
+--dev--
+    MUC
+MUC Precision: 0.7458279845956355
+MUC Recall:    0.50920245398773
+MUC F1:        0.6052083333333332
+    B^3
+B^3 Precision: 0.6906044949062531
+B^3 Recall:    0.5537623328013662
+B^3 F1:        0.6146591947439043
+
+
+Scores for betterBaseline model on 1000 training docs.
+We don't have improvement on the training set but does increase the recall in test set.
+It will decrease the precision no doubt as it can involve more mentions in a cluster rather 
+than leaving them as singleton. But it can definitely increase recall on the other hand.
+--------------------
+ COREFERENCE SCORES
+--------------------
+--Training--
+    MUC
+MUC Precision: 0.8113983113612798
+MUC Recall:    0.9261169111120504
+MUC F1:        0.8649704912855536
+    B^3
+B^3 Precision: 0.5492170079821038
+B^3 Recall:    0.9201792741489346
+B^3 F1:        0.6878717659776318
+
+--dev--
+    MUC
+MUC Precision: 0.755175983436853
+MUC Recall:    0.6393514460999123
+MUC F1:        0.692453725676317
+    B^3
+B^3 Precision: 0.5728585490926571
+B^3 Recall:    0.6611197923874454
+B^3 F1:        0.6138326943230511
+
