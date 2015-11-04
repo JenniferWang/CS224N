@@ -18,7 +18,7 @@ public class ClusteredMention {
     this.mention = mention;
     this.entity = entity;
   }
-
+  
   @Override
   public boolean equals(Object o){
     if(o instanceof ClusteredMention){

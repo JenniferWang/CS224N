@@ -25,7 +25,8 @@ public class RuleBased implements CoreferenceSystem {
     ExactMatchSieve exactMatchSieve = new ExactMatchSieve();
     StrictHeadMatchingSieve strictHeadMatchingSeive = new StrictHeadMatchingSieve();
     SingletonSieve singletonSieve = new SingletonSieve();
-    return passAllSieves(mentions, strictHeadMatchingSeive);
+    BaselinePronounSieve baselinePronounSieve = new BaselinePronounSieve();
+    return passAllSieves(mentions, strictHeadMatchingSeive, baselinePronounSieve);
 	}
 
   public List<ClusteredMention> passAllSieves(
@@ -137,6 +138,34 @@ public class RuleBased implements CoreferenceSystem {
           return false;
       }
       return true;
+    }
+  }
+
+  public class BaselinePronounSieve implements Sieve {
+    public List<ClusteredMention> passSieve(List<ClusteredMention> mentions) {
+      List<ClusteredMention> newMentions = new ArrayList<ClusteredMention>();
+
+      int n = mentions.size();
+      if (n == 0) return mentions;
+
+      for (int i = 0; i < n; i++) {
+        Mention curr_men = mentions.get(i).mention;
+        if (curr_men.headToken().isPronoun() && curr_men.isSingleton()) {
+          for (int j = i - 1; j > -1 ; j--) {
+            Mention prev_men = newMentions.get(j).mention;
+            if (prev_men.headToken().isNoun()) {
+              curr_men.removeCoreference();
+              newMentions.add(curr_men.markCoreferent(newMentions.get(j)));
+              break;
+            }
+          }
+        }
+
+        if (newMentions.size() < i + 1) {
+          newMentions.add(mentions.get(i));
+        }
+      }
+      return newMentions;
     }
   }
 }

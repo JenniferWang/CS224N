@@ -88,17 +88,6 @@ public class Entity implements Serializable, Decodable, Iterable<Mention> {
       throw new IllegalArgumentException("Trying to remove mention that is not coreferrant with entity");
   }
 
-  public void merge(Entity ent) {
-    for (Mention m: ent.mentionList) {
-      if(!m.removeCoreference()) {
-        throw new IllegalArgumentException("Trying to remove coreference in a wrong way");
-      }
-      m.markCoreferent(this);
-    }
-    ent.mentionList = null;
-    ent.mentions = null;
-  }
-
   /**
    * Add all mentions in a collection
    * @param mentions The mentions to mark as coreferent

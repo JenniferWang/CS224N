@@ -187,6 +187,11 @@ public class Mention implements Serializable, Decodable {
   public Entity getCorefferentWith() {
     return corefferentWith;
   }
+
+  public boolean isSingleton() {
+    return corefferentWith == null || corefferentWith.size() == 1;
+  }
+
   @Override
   public int hashCode(){
     return this.sentence.hashCode() ^ beginIndexInclusive ^ (endIndexExclusive << 15);
