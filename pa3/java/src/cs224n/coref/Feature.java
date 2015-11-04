@@ -101,6 +101,32 @@ public interface Feature {
     public ExactMatch(boolean exactMatch){ super(exactMatch); }
   }
   
+  public static class HeadMatch extends Indicator {
+    public HeadMatch(boolean headMatch){ super(headMatch); }
+  }
+  
+  public static class SameNer extends Indicator {
+    public SameNer(boolean sameNer){ super(sameNer); }
+  }
+
+	/*
+  public static class IsPronoun extends Indicator {
+    public IsPronoun(boolean isPronoun){ super(isPronoun); }
+  }
+
+  public static class SameSentence extends Indicator {
+    public SameSentence(boolean sameSentence){ super(sameSentence); }
+  }
+
+  public static class Recency extends IntIndicator {
+    public Recency(int recency){ super(recency); }
+  }
+
+  public static class SenRecency extends IntIndicator {
+    public SenRecency(int senRecency){ super(senRecency); }
+  }
+	*/
+
   /*
    * TODO: Add values to the indicators here.
    */

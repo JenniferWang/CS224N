@@ -33,7 +33,13 @@ public class ClassifierBased implements CoreferenceSystem {
 			 * TODO: Create a set of active features
 			 */
 
-			Feature.ExactMatch.class,
+			//Feature.ExactMatch.class,
+			Feature.HeadMatch.class,
+			//Feature.SameSentence.class,
+			//Feature.Recency.class,
+			//Feature.SenRecency.class,
+			//Feature.IsPronoun.class,
+			Feature.SameNer.class,
 
 			//skeleton for how to create a pair feature
 			//Pair.make(Feature.IsFeature1.class, Feature.IsFeature2.class),
@@ -57,13 +63,31 @@ public class ClassifierBased implements CoreferenceSystem {
 
 
 			//--Features
+			/*
 			if(clazz.equals(Feature.ExactMatch.class)){
 				//(exact string match)
-				return new Feature.ExactMatch(onPrix.gloss().equals(candidate.gloss()));
+				return new Feature.ExactMatch(onPrix.gloss().equals(candidate.gloss()));*/
 //			} else if(clazz.equals(Feature.NewFeature.class) {
 				/*
 				 * TODO: Add features to return for specific classes. Implement calculating values of features here.
 				 */
+			//}  else 
+			if(clazz.equals(Feature.HeadMatch.class)) {
+				//System.out.println(onPrix.encode());
+				return new Feature.HeadMatch(onPrix.headWord().equals(candidate.headWord()));
+			/*
+			} else if(clazz.equals(Feature.SameSentence.class)) {
+				return new Feature.SameSentence(onPrix.sentence.equals(candidate.sentence));
+			}
+			} else if(clazz.equals(Feature.Recency.class)) {
+				return new Feature.Recency(onPrix.doc.indexOfMention(onPrix) - candidate.doc.indexOfMention(candidate));
+			} else if(clazz.equals(Feature.SenRecency.class)) {
+				return new Feature.SenRecency(onPrix.doc.indexOfSentence(onPrix.sentence) - candidate.doc.indexOfSentence(candidate.sentence));
+			} else if(clazz.equals(Feature.IsPronoun.class)) {
+				return new Feature.IsPronoun(onPrix.headToken().posTag().equals("PRP") || candidate.headToken().posTag().equals("PRP"));
+			*/
+			} else if(clazz.equals(Feature.SameNer.class)) {
+				return new Feature.SameNer(onPrix.headToken().nerTag().equals(candidate.headToken().nerTag()));
 			}
 			else {
 				throw new IllegalArgumentException("Unregistered feature: " + clazz);
