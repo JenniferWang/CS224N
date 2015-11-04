@@ -15,6 +15,18 @@ import java.util.*;
  */
 public class Sentence implements Serializable, Decodable {
   private static final long serialVersionUID = 1L;
+  // TODO: Add more category for pronouns
+  protected static Set<String> malePool;
+  protected static Set<String> femalePool;
+  protected static Set<String> pluralPool;
+  static {
+    malePool = new HashSet<String>();
+    malePool.addAll(Arrays.asList("him", "himself", "hisself", "his"));
+    femalePool = new HashSet<String>();
+    femalePool.addAll(Arrays.asList("hers", "herself", "she", "her"));
+    Set<String> pluralPool = new HashSet<String>();
+    pluralPool.addAll(Arrays.asList("ours", "ourselves", "thee", "theirs", "them", "themselves", "they", "thou", "thy"));
+  }
 
   /**
    * A token of the sentence, encapsulating useful information
@@ -92,7 +104,7 @@ public class Sentence implements Serializable, Decodable {
 
     public boolean isPronoun() {
       String tag = posTag();
-      return tag.equals("PRP");
+      return tag.equals("PRP") || tag.equals("PRP$");
     }
   }
 
