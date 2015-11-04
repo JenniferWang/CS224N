@@ -78,6 +78,27 @@ public class Entity implements Serializable, Decodable, Iterable<Mention> {
     return this;
   }
 
+  /** 
+  *  Remove a mention from an entity
+  *  @param mention The mention to remove
+  **/
+  public void remove(Mention mention) {
+    Boolean result = mentions.remove(mention);
+    if (!result)
+      throw new IllegalArgumentException("Trying to remove mention that is not coreferrant with entity");
+  }
+
+  public void merge(Entity ent) {
+    for (Mention m: ent.mentionList) {
+      if(!m.removeCoreference()) {
+        throw new IllegalArgumentException("Trying to remove coreference in a wrong way");
+      }
+      m.markCoreferent(this);
+    }
+    ent.mentionList = null;
+    ent.mentions = null;
+  }
+
   /**
    * Add all mentions in a collection
    * @param mentions The mentions to mark as coreferent

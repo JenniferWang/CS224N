@@ -421,6 +421,7 @@ public class CoreferenceTester<SYS extends CoreferenceSystem> {
       datum.document.setMentions(mentions);
       //(run coreference)
       Collection<ClusteredMention> guess = system.runCoreference(datum.document);
+      // System.out.println(guess);
       HashSet<ClusteredMention> uniqueCheck = new HashSet<ClusteredMention>();
       for(ClusteredMention m : guess){ uniqueCheck.add(m); }
       if(uniqueCheck.size() != guess.size()){

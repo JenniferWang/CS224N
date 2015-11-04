@@ -5,6 +5,7 @@ import cs224n.util.Decodable;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,6 +86,23 @@ public class Mention implements Serializable, Decodable {
    */
   public Sentence.Token headToken(){ return sentence.tokens.get(headWordIndex); }
 
+  public List<Sentence.Token> allTokens() {
+    List<Sentence.Token> t = new ArrayList<Sentence.Token>();
+    for (int i = beginIndexInclusive; i < endIndexExclusive; i++) {
+      t.add(sentence.tokens.get(i));
+    }
+    return t;
+  }
+
+  public List<String> toLemmas() {
+    List<String> l = new ArrayList<String>();
+    for (Sentence.Token t: allTokens()) {
+      l.add(t.lemma());
+    }
+    return l;
+  }
+
+
   /**
    * A String reproduction of this mention
    * @return The gloss for this mention
@@ -146,6 +164,19 @@ public class Mention implements Serializable, Decodable {
     } else {
       return false;
     }
+  }
+
+  /**
+  * Remove coreference from mention
+  * @return boolean true if removed coreference successfully, false if
+    wasn't coreferent to any entity
+  */
+  public boolean removeCoreference(){
+    if(corefferentWith != null){
+      corefferentWith = null;
+      return true;
+    }
+    return false;
   }
 
   /** Returns the entity the mention is corefferent with.

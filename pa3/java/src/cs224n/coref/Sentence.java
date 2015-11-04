@@ -89,6 +89,11 @@ public class Sentence implements Serializable, Decodable {
       String tag = posTag();
       return tag.equals("NN") || tag.equals("NNS") || tag.equals("NNP") || tag.equals("NNPS");
     }
+
+    public boolean isPronoun() {
+      String tag = posTag();
+      return tag.equals("PRP");
+    }
   }
 
   /**
