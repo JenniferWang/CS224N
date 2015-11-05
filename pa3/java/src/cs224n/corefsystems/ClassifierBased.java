@@ -35,7 +35,7 @@ public class ClassifierBased implements CoreferenceSystem {
 			 * TODO: Create a set of active features
 			 */
 
-			Feature.ExactMatch.class,
+			//Feature.ExactMatch.class,
 			Feature.HeadMatch.class,
 			Feature.TagMatch.class,
 			//Feature.SameSentence.class,
