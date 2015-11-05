@@ -41,13 +41,13 @@ public class ClassifierBased implements CoreferenceSystem {
 			//Feature.SameSentence.class,
 			Feature.Recency.class,
 			Feature.SenRecency.class,
-			//Feature.PrixIsPronoun.class,
-			//Feature.CanIsPronoun.class,
+			Feature.PrixIsPronoun.class,
+			Feature.CanIsPronoun.class,
 			//Feature.ExistPronoun.class,
 			Feature.SameNer.class,
 			//Feature.SamePool.class,
-			Feature.PronMatch.class,
-			Feature.PronNotMatch.class,
+			//Feature.PronMatch.class,
+			//Feature.PronNotMatch.class,
 			//Feature.PronPSMatch.class,
 			//Feature.BothMale.class,
 			//Feature.BothFemale.class,
@@ -101,9 +101,9 @@ public class ClassifierBased implements CoreferenceSystem {
 			} else if(clazz.equals(Feature.SenRecency.class)) {
 				return new Feature.SenRecency(Math.abs(onPrix.doc.indexOfSentence(onPrix.sentence) - candidate.doc.indexOfSentence(candidate.sentence)));
 			} else if(clazz.equals(Feature.PrixIsPronoun.class)) {
-				return new Feature.PrixIsPronoun(onPrix.headToken().posTag().equals("PRP"));
+				return new Feature.PrixIsPronoun(Pronoun.isSomePronoun(onPrix.headWord()));
 			} else if(clazz.equals(Feature.CanIsPronoun.class)) {
-				return new Feature.CanIsPronoun(candidate.headToken().posTag().equals("PRP"));
+				return new Feature.CanIsPronoun(Pronoun.isSomePronoun(candidate.headWord()));
 			} else if(clazz.equals(Feature.ExistPronoun.class)) {
 				return new Feature.ExistPronoun(onPrix.headToken().posTag().equals("PRP") || candidate.headToken().posTag().equals("PRP"));
 			} else if(clazz.equals(Feature.SameNer.class)) {
