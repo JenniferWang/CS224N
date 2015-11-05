@@ -161,6 +161,18 @@ public interface Feature {
   public static class BothFemale extends Indicator {
     public BothFemale(boolean bothFemale){ super(bothFemale); }
 	}
+
+	public static class NotBothPronoun extends Indicator {
+		public NotBothPronoun(boolean notBothPronoun) {super(notBothPronoun);}
+	}
+
+	public static class GenderAndGenderMatch extends Indicator {
+		public GenderAndGenderMatch(boolean genderAndGenderMatch) {super(genderAndGenderMatch);}
+	}
+
+	public static class NumberAndNumberMatch extends Indicator {
+		public NumberAndNumberMatch(boolean numberAndNumberMatch) {super(numberAndNumberMatch);}
+	}
   /*
    * TODO: Add values to the indicators here.
    */
