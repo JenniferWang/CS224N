@@ -45,6 +45,85 @@
 1	VerbT -> carries
 1	VerbT -> rides
 
+# Transitive Verbs:
+1	VerbT -> have
+1	VerbT -> speak
+1	VerbT -> cover
+1	VerbT -> be
+1	VerbT -> ride
+1	VerbT -> drink
+0.1	VerbT -> grow
+1	VerbT -> carry
+1	VerbT -> suggest
+1	VerbT -> know
+
+# Intransitive Verbs:
+1	VerbI -> speak
+1	VerbI -> cover
+1	VerbI -> be
+1	VerbI -> ride
+1	VerbI -> drink
+1	VerbI -> grow
+0.5	VerbI -> carry
+1	VerbI -> migrate
+2	VerbI -> know
+
+# Ditransitive verbs:
+1	VerbD -> suggest
+
+# Verbs (past tense).
+1	Misc ->	had
+1	Misc ->	spoke
+1	Misc ->	covered
+1	Misc ->	was
+1	Misc ->	were
+1	Misc ->	rode
+1	Misc ->	drank
+1	Misc ->	grew
+1	Misc ->	carried
+1	Misc ->	suggested
+1	Misc ->	migrated
+1	Misc ->	knew
+
+# Verbs (present participles).
+1	Misc ->	having
+1	Misc ->	speaking
+1	Misc ->	covering
+1	Misc ->	being
+1	Misc ->	riding
+1	Misc ->	drinking
+1	Misc ->	growing
+1	Misc ->	carrying
+1	Misc ->	suggesting
+1	Misc ->	migrating
+1	Misc ->	knowing
+
+# Verbs (past participle).
+1	Misc ->	had
+1	Misc ->	spoken
+1	Misc ->	covered
+1	Misc ->	been
+1	Misc ->	ridden
+1	Misc ->	drunk
+1	Misc ->	grown
+1	Misc ->	carried
+1	Misc ->	suggested
+1	Misc ->	migrated
+1	Misc ->	known
+
+# Verbs (present, plural, third person).
+1	Misc ->	have
+1	Misc ->	speak
+1	Misc ->	cover
+1	Misc ->	are
+1	Misc ->	ride
+1	Misc ->	drink
+1	Misc ->	grow
+1	Misc ->	carry
+1	Misc ->	suggest
+1	Misc ->	migrate
+1	Misc ->	know
+
 # End-of-sentence.
 1	Misc ->	!
 1	Misc ->	.
@@ -186,59 +265,6 @@
 # 'not'
 1	Misc ->	not
 
-# Verbs (base form).
-1	Misc ->	have
-1	Misc ->	speak
-1	Misc ->	cover
-1	Misc ->	be
-1	Misc ->	ride
-1	Misc ->	drink
-1	Misc ->	grow
-1	Misc ->	carry
-1	Misc ->	suggest
-1	Misc ->	migrate
-1	Misc ->	know
-
-# Verbs (past tense).
-1	Misc ->	had
-1	Misc ->	spoke
-1	Misc ->	covered
-1	Misc ->	was
-1	Misc ->	were
-1	Misc ->	rode
-1	Misc ->	drank
-1	Misc ->	grew
-1	Misc ->	carried
-1	Misc ->	suggested
-1	Misc ->	migrated
-1	Misc ->	knew
-
-# Verbs (present participles).
-1	Misc ->	having
-1	Misc ->	speaking
-1	Misc ->	covering
-1	Misc ->	being
-1	Misc ->	riding
-1	Misc ->	drinking
-1	Misc ->	growing
-1	Misc ->	carrying
-1	Misc ->	suggesting
-1	Misc ->	migrating
-1	Misc ->	knowing
-
-# Verbs (past participle).
-1	Misc ->	had
-1	Misc ->	spoken
-1	Misc ->	covered
-1	Misc ->	been
-1	Misc ->	ridden
-1	Misc ->	drunk
-1	Misc ->	grown
-1	Misc ->	carried
-1	Misc ->	suggested
-1	Misc ->	migrated
-1	Misc ->	known
-
 # More third person singular verbs.
 1	Misc ->	speaks
 1	Misc ->	grows
@@ -247,18 +273,6 @@
 1	Misc ->	suggests
 1	Misc ->	knows
 
-# Verbs (present, plural, third person).
-1	Misc ->	have
-1	Misc ->	speak
-1	Misc ->	cover
-1	Misc ->	are
-1	Misc ->	ride
-1	Misc ->	drink
-1	Misc ->	grow
-1	Misc ->	carry
-1	Misc ->	suggest
-1	Misc ->	migrate
-1	Misc ->	know
 
 # Wh-determiners.
 1	Wh ->	that

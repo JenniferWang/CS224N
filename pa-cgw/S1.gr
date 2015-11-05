@@ -9,6 +9,10 @@
 1 S1 -> NP VP .
 
 1 VP -> VerbT NP
+1 VP -> VerbI
+0.2 VP -> VerbD NP NP
+
+2 VP -> VP PP
 
 20 NP -> Det Nbar
 1 NP -> Proper

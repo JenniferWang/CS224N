@@ -101,6 +101,66 @@ public interface Feature {
     public ExactMatch(boolean exactMatch){ super(exactMatch); }
   }
   
+  public static class HeadMatch extends Indicator {
+    public HeadMatch(boolean headMatch){ super(headMatch); }
+  }
+  
+  public static class TagMatch extends Indicator {
+    public TagMatch(boolean tagMatch){ super(tagMatch); }
+  }
+
+  public static class SameNer extends Indicator {
+    public SameNer(boolean sameNer){ super(sameNer); }
+  }
+
+  public static class SamePool extends Indicator {
+    public SamePool(boolean samePool){ super(samePool); }
+  }
+
+  public static class PrixIsPronoun extends Indicator {
+    public PrixIsPronoun(boolean prixIsPronoun){ super(prixIsPronoun); }
+  }
+
+  public static class CanIsPronoun extends Indicator {
+    public CanIsPronoun(boolean canIsPronoun){ super(canIsPronoun); }
+  }
+
+  public static class ExistPronoun extends Indicator {
+    public ExistPronoun(boolean existPronoun){ super(existPronoun); }
+  }
+
+  public static class SameSentence extends Indicator {
+    public SameSentence(boolean sameSentence){ super(sameSentence); }
+  }
+
+  public static class Recency extends IntIndicator {
+    public Recency(int recency){ super(recency); }
+  }
+
+  public static class SenRecency extends IntIndicator {
+    public SenRecency(int senRecency){ super(senRecency); }
+  }
+
+
+  public static class PronMatch extends Indicator {
+    public PronMatch(boolean pronMatch){ super(pronMatch); }
+  }
+
+  public static class PronNotMatch extends Indicator {
+    public PronNotMatch(boolean pronNotMatch){ super(pronNotMatch); }
+  }
+
+  public static class PronPSMatch extends Indicator {
+    public PronPSMatch(boolean pronPSMatch){ super(pronPSMatch); }
+  }
+
+  public static class BothMale extends Indicator {
+    public BothMale(boolean bothMale){ super(bothMale); }
+	}
+
+  public static class BothFemale extends Indicator {
+    public BothFemale(boolean bothFemale){ super(bothFemale); }
+	}
   /*
    * TODO: Add values to the indicators here.
    */
