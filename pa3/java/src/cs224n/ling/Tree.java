@@ -22,6 +22,9 @@ public class Tree<L> implements Serializable, Decodable {
   private List<Tree<L>> children;
   private int uniqueIndex = nextUniqueIndex++;
 
+  public boolean equalsLabel(L l) {
+    return label.equals(l);
+  }
 
   public List<Tree<L>> getChildren() {
     return children;
