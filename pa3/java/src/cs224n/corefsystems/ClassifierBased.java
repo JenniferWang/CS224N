@@ -16,6 +16,8 @@ import java.util.*;
 
 import static edu.stanford.nlp.util.logging.Redwood.Util.*;
 
+import java.lang.Math;
+
 /**
  * @author Gabor Angeli (angeli at cs.stanford)
  */
@@ -33,13 +35,23 @@ public class ClassifierBased implements CoreferenceSystem {
 			 * TODO: Create a set of active features
 			 */
 
-			//Feature.ExactMatch.class,
+			Feature.ExactMatch.class,
 			Feature.HeadMatch.class,
+			Feature.TagMatch.class,
 			//Feature.SameSentence.class,
-			//Feature.Recency.class,
-			//Feature.SenRecency.class,
-			//Feature.IsPronoun.class,
+			Feature.Recency.class,
+			Feature.SenRecency.class,
+			//Feature.PrixIsPronoun.class,
+			//Feature.CanIsPronoun.class,
+			//Feature.ExistPronoun.class,
 			Feature.SameNer.class,
+			//Feature.SamePool.class,
+			Feature.PronMatch.class,
+			Feature.PronNotMatch.class,
+			//Feature.PronPSMatch.class,
+			//Feature.BothMale.class,
+			//Feature.BothFemale.class,
+
 
 			//skeleton for how to create a pair feature
 			//Pair.make(Feature.IsFeature1.class, Feature.IsFeature2.class),
@@ -73,21 +85,43 @@ public class ClassifierBased implements CoreferenceSystem {
 				 */
 			//}  else 
 			if(clazz.equals(Feature.HeadMatch.class)) {
-				//System.out.println(onPrix.encode());
+				//System.out.println(onPrix.gloss() + "||" + onPrix.headWord() + "||" + onPrix.headToken().nerTag());
 				return new Feature.HeadMatch(onPrix.headWord().equals(candidate.headWord()));
-			/*
+			
+			} else if(clazz.equals(Feature.ExactMatch.class)) {
+				return new Feature.ExactMatch(onPrix.gloss().equals(candidate.gloss()));
+			} else if(clazz.equals(Feature.TagMatch.class)) {
+				return new Feature.ExactMatch(onPrix.headToken().posTag().equals(candidate.headToken().posTag()));
 			} else if(clazz.equals(Feature.SameSentence.class)) {
 				return new Feature.SameSentence(onPrix.sentence.equals(candidate.sentence));
-			}
 			} else if(clazz.equals(Feature.Recency.class)) {
-				return new Feature.Recency(onPrix.doc.indexOfMention(onPrix) - candidate.doc.indexOfMention(candidate));
+				return new Feature.Recency(Math.abs(onPrix.doc.indexOfMention(onPrix) - candidate.doc.indexOfMention(candidate)));
 			} else if(clazz.equals(Feature.SenRecency.class)) {
-				return new Feature.SenRecency(onPrix.doc.indexOfSentence(onPrix.sentence) - candidate.doc.indexOfSentence(candidate.sentence));
-			} else if(clazz.equals(Feature.IsPronoun.class)) {
-				return new Feature.IsPronoun(onPrix.headToken().posTag().equals("PRP") || candidate.headToken().posTag().equals("PRP"));
-			*/
+				return new Feature.SenRecency(Math.abs(onPrix.doc.indexOfSentence(onPrix.sentence) - candidate.doc.indexOfSentence(candidate.sentence)));
+			} else if(clazz.equals(Feature.PrixIsPronoun.class)) {
+				return new Feature.PrixIsPronoun(onPrix.headToken().posTag().equals("PRP"));
+			} else if(clazz.equals(Feature.CanIsPronoun.class)) {
+				return new Feature.CanIsPronoun(candidate.headToken().posTag().equals("PRP"));
+			} else if(clazz.equals(Feature.ExistPronoun.class)) {
+				return new Feature.ExistPronoun(onPrix.headToken().posTag().equals("PRP") || candidate.headToken().posTag().equals("PRP"));
 			} else if(clazz.equals(Feature.SameNer.class)) {
 				return new Feature.SameNer(onPrix.headToken().nerTag().equals(candidate.headToken().nerTag()));
+				/*
+			} else if(clazz.equals(Feature.SamePool.class)) {
+				String onPrixPool = onPrix.headToken().pool();
+				String candidatePool = candidate.headToken().pool();
+				return new Feature.SamePool(onPrixPool.equals(candidatePool) || onPrixPool.equals("none") || candidatePool.equals("none"));
+				*/
+			} else if(clazz.equals(Feature.PronMatch.class)) {
+				return new Feature.PronMatch(onPrix.headToken().posTag().equals("PRP") && candidate.headToken().posTag().equals("PRP") && onPrix.headToken().gender().equals(candidate.headToken().gender()) && onPrix.headToken().ps().equals(candidate.headToken().ps()));
+			} else if(clazz.equals(Feature.PronNotMatch.class)) {
+				return new Feature.PronNotMatch(onPrix.headToken().posTag().equals("PRP") && candidate.headToken().posTag().equals("PRP") && (!onPrix.headToken().gender().equals(candidate.headToken().gender()) || !onPrix.headToken().ps().equals(candidate.headToken().ps())));
+			} else if(clazz.equals(Feature.PronPSMatch.class)) {
+				return new Feature.PronPSMatch(onPrix.headToken().posTag().equals("PRP") && candidate.headToken().posTag().equals("PRP") && onPrix.headToken().ps().equals(candidate.headToken().ps()));
+			} else if(clazz.equals(Feature.BothMale.class)) {
+				return new Feature.BothMale(onPrix.headToken().posTag().equals("PRP") && candidate.headToken().posTag().equals("PRP") && onPrix.headToken().gender().equals("male") && candidate.headToken().ps().equals("male"));
+			} else if(clazz.equals(Feature.BothFemale.class)) {
+				return new Feature.BothFemale(onPrix.headToken().posTag().equals("PRP") && candidate.headToken().posTag().equals("PRP") && onPrix.headToken().gender().equals("female") && candidate.headToken().ps().equals("female"));
 			}
 			else {
 				throw new IllegalArgumentException("Unregistered feature: " + clazz);

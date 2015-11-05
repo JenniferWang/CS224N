@@ -21,11 +21,11 @@ public class Sentence implements Serializable, Decodable {
   protected static Set<String> pluralPool;
   static {
     malePool = new HashSet<String>();
-    malePool.addAll(Arrays.asList("him", "himself", "hisself", "his"));
+    malePool.addAll(Arrays.asList("him", "himself", "he"));
     femalePool = new HashSet<String>();
-    femalePool.addAll(Arrays.asList("hers", "herself", "she", "her"));
-    Set<String> pluralPool = new HashSet<String>();
-    pluralPool.addAll(Arrays.asList("ours", "ourselves", "thee", "theirs", "them", "themselves", "they", "thou", "thy"));
+    femalePool.addAll(Arrays.asList("herself", "she", "her"));
+    pluralPool = new HashSet<String>();
+    pluralPool.addAll(Arrays.asList("we", "us", "ours", "ourselves", "you", "yourselves", "yours", "thee", "theirs", "them", "themselves", "they", "thou", "thy"));
   }
 
   /**
@@ -34,10 +34,30 @@ public class Sentence implements Serializable, Decodable {
    */
   public class Token implements Serializable{
     private int index;
+		private String gender;
+		private String ps;
     private Token(int index){
       this.index = index;
+			if (malePool.contains(words.get(index))) this.gender = "male";
+			else if (femalePool.contains(words.get(index))) this.gender = "female";
+			else this.gender = "none";
+			if (pluralPool.contains(words.get(index))) this.ps = "plural";
+			else this.ps = "sigular";
+
     }
     // -- Getters --
+    /**
+     * The gender associated with this token
+     * @return A String gender
+     */
+    public String gender(){ return this.gender; }
+
+    /**
+     * The ps (plural/singular) associated with this token
+     * @return A String ps
+     */
+    public String ps(){ return this.ps; }
+
     /**
      * The word associated with this token
      * @return A String word
