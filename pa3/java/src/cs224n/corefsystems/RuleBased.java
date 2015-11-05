@@ -216,10 +216,15 @@ public class RuleBased implements CoreferenceSystem {
           return false;
         }
 
-        // speaker
+        // same speaker
         if (!tm.headToken().speaker().equals(m.headToken().speaker())) {
           return false;
         }
+
+        // if (!tm.headToken().nerTag().equals(m.headToken().nerTag())) {
+        //   System.out.println(tm.text() + " " + tm.headToken().nerTag() + "  " + m.text() + " " + m.headToken().nerTag());
+        //   return false;
+        // }
 
       } catch (NullPointerException e) {
         return false;
@@ -283,10 +288,7 @@ public class RuleBased implements CoreferenceSystem {
           // Step 5: If X is an NP, and p does not pass through an N-bar that X 
           // immediately dominates, propose X.
           if (treeToMentMap.containsKey(x) && propose(x, m_root)) {
-            m.removeCoreference();
-            ClusteredMention cm = m.markCoreferent(treeToMentMap.get(x));
-            treeToMentMap.put(m_root, cm);
-            return cm;
+            return updateMentionAndMap(m, x);
           }
           npOrS = 1;
         }
@@ -301,10 +303,7 @@ public class RuleBased implements CoreferenceSystem {
           Tree<String> child = child_q.poll();
           Integer count = npOrS_q.poll();  
           if (count > 0 && treeToMentMap.containsKey(child) && propose(child, m_root)) {
-            m.removeCoreference();
-            ClusteredMention cm = m.markCoreferent(treeToMentMap.get(child));
-            treeToMentMap.put(m_root, cm);
-            return cm;
+            return updateMentionAndMap(m, child);
           }
           int increase = child.equalsLabel("NP") || child.equalsLabel("S") ? 1 : 0;
           for (Tree<String> c: child.getChildren()) {
@@ -314,7 +313,17 @@ public class RuleBased implements CoreferenceSystem {
         }
 
         if (x_idx == 0) {
-          // TODO: bfs to the right of path
+          // If X is an S, search below X to right of p, left-to-right, 
+          // breadth-first, but not going through any NP or S, proposing NP 
+          // encountered.
+          int p_idx = idxOfChildInTree(x, path.get(1));
+          if (p_idx > 0 && p_idx + 1 < x.getChildren().size()) {
+            Tree<String> candidate = bfsTree(x.getChildren().get(p_idx + 1), m_root, true);
+            if (candidate != null) {
+              // System.out.println(m + " " + candidate);
+              return updateMentionAndMap(m, candidate);
+            }
+          } 
         }
         x_idx -= 1;
         isStepTwo = false;
@@ -324,17 +333,33 @@ public class RuleBased implements CoreferenceSystem {
       int idx_sentence = doc.indexOfSentence(m.sentence);
       for (int i = idx_sentence - 1; i > -1; i--) {
         Tree<String> prev_root = doc.sentences.get(i).parse;
-        Tree<String> candidate = bfsTree(prev_root, m_root);
+        Tree<String> candidate = bfsTree(prev_root, m_root, false);
         if (candidate == null) continue;
-        m.removeCoreference();
-        ClusteredMention cm = m.markCoreferent(treeToMentMap.get(candidate));
-        treeToMentMap.put(m_root, cm);
-        return cm;
+        return updateMentionAndMap(m, candidate);
       }
       return pronoun;
     }
 
-    protected Tree<String> bfsTree(Tree<String> root, Tree<String> m_root) {
+    protected ClusteredMention updateMentionAndMap(Mention m, Tree<String> t_cluster) {
+      if (!m.isSingleton()) {
+        throw new IllegalArgumentException("Mention is not singleton");
+      }
+      m.removeCoreference();
+      ClusteredMention new_cm = m.markCoreferent(treeToMentMap.get(t_cluster));
+      treeToMentMap.put(m.parse, new_cm);
+      return new_cm;
+    }
+
+    protected int idxOfChildInTree(Tree<String> root, Tree<String> child) {
+      for (int i = 0; i < root.getChildren().size(); i++) {
+        if (root.getChildren().get(i).equals(child)) {
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    protected Tree<String> bfsTree(Tree<String> root, Tree<String> m_root, boolean early_stop) {
       Queue<Tree<String>> queue = new LinkedList<Tree<String>>();
       queue.add(root);
       while (!queue.isEmpty()) {
@@ -342,6 +367,10 @@ public class RuleBased implements CoreferenceSystem {
         if (treeToMentMap.containsKey(node) && propose(node, m_root)) {
           return node;
         }
+        if (early_stop && treeToMentMap.containsKey(node)) {
+          return null;
+        } 
+
         for (Tree<String> child: node.getChildren()) {
           queue.add(child);
         }
