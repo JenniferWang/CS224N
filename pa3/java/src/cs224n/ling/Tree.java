@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
 
 /**
  * Represent linguistic trees, with each node consisting of a label
@@ -22,8 +23,9 @@ public class Tree<L> implements Serializable, Decodable {
   private List<Tree<L>> children;
   private int uniqueIndex = nextUniqueIndex++;
 
-  public boolean equalsLabel(L l) {
-    return label.equals(l);
+  public boolean equalLabelsByOr(L ...l) {
+    if (l.length == 0) return true;
+    return label.equals(l[0]) || equalLabelsByOr(Arrays.copyOfRange(l, 1, l.length));
   }
 
   public List<Tree<L>> getChildren() {
