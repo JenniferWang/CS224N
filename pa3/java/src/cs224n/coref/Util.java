@@ -54,5 +54,4 @@ public class Util {
     }
     return Pair.make(false, false);
   }
-
 }

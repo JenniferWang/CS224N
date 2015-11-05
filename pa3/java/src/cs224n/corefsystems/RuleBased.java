@@ -6,6 +6,7 @@ import cs224n.coref.Document;
 import cs224n.coref.Mention;
 import cs224n.coref.Sentence;
 import cs224n.coref.Entity;
+import cs224n.coref.Util;
 import cs224n.util.Pair;
 import java.util.ArrayList;
 import java.util.*;
@@ -204,6 +205,22 @@ public class RuleBased implements CoreferenceSystem {
       try {
         Mention tm = treeToMentMap.get(tree).mention;
         Mention m = treeToMentMap.get(m_root).mention;
+
+        Pair<Boolean, Boolean> gender_res = Util.haveGenderAndAreSameGender(tm, m);
+        if (gender_res.getFirst() && !gender_res.getSecond()) {
+          return false;
+        }
+
+        Pair<Boolean, Boolean> num_res = Util.haveNumberAndAreSameNumber(tm, m);
+        if (num_res.getFirst() && !num_res.getSecond()) {
+          return false;
+        }
+
+        // speaker
+        if (!tm.headToken().speaker().equals(m.headToken().speaker())) {
+          return false;
+        }
+
       } catch (NullPointerException e) {
         return false;
       }
