@@ -17,9 +17,9 @@ public class RuleBased implements CoreferenceSystem {
 
   private CounterMap<String, String> headStats;
 
-	@Override
-	public void train(Collection<Pair<Document, List<Entity>>> trainingData) {
-		headStats = new CounterMap<String, String>();
+  @Override
+  public void train(Collection<Pair<Document, List<Entity>>> trainingData) {
+    headStats = new CounterMap<String, String>();
     for(Pair<Document, List<Entity>> pair : trainingData){
       Document doc = pair.getFirst();
       List<Entity> clusters = pair.getSecond();
@@ -35,10 +35,10 @@ public class RuleBased implements CoreferenceSystem {
       }
     }
     headStats = Counters.conditionalNormalize(headStats);
-	}
+  }
 
-	@Override
-	public List<ClusteredMention> runCoreference(Document doc) {
+  @Override
+  public List<ClusteredMention> runCoreference(Document doc) {
 		// turn all mentions to singleton
     List<ClusteredMention> mentions = new ArrayList<ClusteredMention>();
     for (Mention m: doc.getMentions()) {
@@ -51,7 +51,7 @@ public class RuleBased implements CoreferenceSystem {
     HobbsPronounSieve hobbsPronounSeive = new HobbsPronounSieve(doc);
     FuzzyHeadMatchingSieve fuzzyHeadMatchingSeive = new FuzzyHeadMatchingSieve(0.1);
     return passAllSieves(mentions, strictHeadMatchingSeive, fuzzyHeadMatchingSeive, hobbsPronounSeive);
-	}
+  }
 
   public List<ClusteredMention> passAllSieves(
     List<ClusteredMention> mentions, 
