@@ -39,18 +39,18 @@ public class RuleBased implements CoreferenceSystem {
 
   @Override
   public List<ClusteredMention> runCoreference(Document doc) {
-		// turn all mentions to singleton
     List<ClusteredMention> mentions = new ArrayList<ClusteredMention>();
     for (Mention m: doc.getMentions()) {
       mentions.add(m.markSingleton());
     }
-    // ExactMatchSieve exactMatchSieve = new ExactMatchSieve();
+    ExactMatchSieve exactMatchSieve = new ExactMatchSieve();
     StrictHeadMatchingSieve strictHeadMatchingSeive = new StrictHeadMatchingSieve();
     // SingletonSieve singletonSieve = new SingletonSieve();
     // BaselinePronounSieve baselinePronounSieve = new BaselinePronounSieve();
     HobbsPronounSieve hobbsPronounSeive = new HobbsPronounSieve(doc);
     FuzzyHeadMatchingSieve fuzzyHeadMatchingSeive = new FuzzyHeadMatchingSieve(0.1);
-    return passAllSieves(mentions, strictHeadMatchingSeive, fuzzyHeadMatchingSeive, hobbsPronounSeive);
+    return passAllSieves(mentions, strictHeadMatchingSeive);
+    // return passAllSieves(mentions, exactMatchSieve, strictHeadMatchingSeive, fuzzyHeadMatchingSeive, hobbsPronounSeive);
   }
 
   public List<ClusteredMention> passAllSieves(
@@ -84,7 +84,7 @@ public class RuleBased implements CoreferenceSystem {
   }
 
   public class ExactMatchSieve implements Sieve {
-    // TODO Exclude pronoun
+
     public List<ClusteredMention> passSieve(List<ClusteredMention> mentions) {
       List<ClusteredMention> newMentions = new ArrayList<ClusteredMention>();
       int n = mentions.size();
@@ -92,16 +92,19 @@ public class RuleBased implements CoreferenceSystem {
 
       for (int i = 0; i < n; i++) {
         Mention curr_men = mentions.get(i).mention;
-        curr_men.removeCoreference();
-        for (int j = i - 1; j > -1; j--) {
-          Mention prev_men = newMentions.get(j).mention;
-          if (curr_men.parse.equals(prev_men.parse)) {
-            newMentions.add(curr_men.markCoreferent(newMentions.get(j)));
-            break;
+        if (!curr_men.headToken().isPronoun()) {
+          for (int j = i - 1; j > -1; j--) {
+            Mention prev_men = newMentions.get(j).mention;
+            if (curr_men.parse.equals(prev_men.parse)) {
+              curr_men.removeCoreference();
+              newMentions.add(curr_men.markCoreferent(newMentions.get(j)));
+              break;
+            }
           }
-        }
+        } 
+
         if (newMentions.size() < i + 1) {
-          newMentions.add(curr_men.markSingleton());
+          newMentions.add(mentions.get(i));
         }
       }
       return newMentions;
