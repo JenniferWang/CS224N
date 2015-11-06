@@ -48,8 +48,8 @@ public class RuleBased implements CoreferenceSystem {
     // SingletonSieve singletonSieve = new SingletonSieve();
     // BaselinePronounSieve baselinePronounSieve = new BaselinePronounSieve();
     HobbsPronounSieve hobbsPronounSeive = new HobbsPronounSieve(doc);
-    FuzzyHeadMatchingSieve fuzzyHeadMatchingSeive = new FuzzyHeadMatchingSieve(0.1);
-    return passAllSieves(mentions, strictHeadMatchingSeive);
+    FuzzyHeadMatchingSieve fuzzyHeadMatchingSeive = new FuzzyHeadMatchingSieve(0.1, false);
+    return passAllSieves(mentions, strictHeadMatchingSeive, fuzzyHeadMatchingSeive, hobbsPronounSeive);
     // return passAllSieves(mentions, exactMatchSieve, strictHeadMatchingSeive, fuzzyHeadMatchingSeive, hobbsPronounSeive);
   }
 
@@ -114,13 +114,15 @@ public class RuleBased implements CoreferenceSystem {
   public class FuzzyHeadMatchingSieve implements Sieve {
 
     protected double threshold;
+    protected boolean exclude_pronoun;
 
-    public FuzzyHeadMatchingSieve(double threshold) {
+    public FuzzyHeadMatchingSieve(double threshold, boolean exclude_pronoun) {
       this.threshold = threshold;
+      this.exclude_pronoun = exclude_pronoun;
     }
 
     protected boolean propose(ClusteredMention prev_cm, ClusteredMention curr_cm) {
-      // System.out.println(treeToMentMap.get(tree).mention.text() + " ** " + treeToMentMap.get(m_root).mention.text());
+      // System.out.println(prev_cm.mention.text() + " ** " + curr_cm.mention.text());
       Mention prev = prev_cm.mention;
       Mention curr = curr_cm.mention;
 
@@ -147,10 +149,55 @@ public class RuleBased implements CoreferenceSystem {
     }
 
     public List<ClusteredMention> passSieve(List<ClusteredMention> mentions) {
+      // return passSieveForward(mentions);
+      return passSieveBackward(passSieveForward(mentions));
+    }
+
+    protected List<ClusteredMention> passSieveBackward(List<ClusteredMention> mentions) {
+      // System.out.print(headStats);
+      List<ClusteredMention> newMentions = new ArrayList<ClusteredMention>();
+      for (int i = mentions.size() - 1; i > -1; i--) {
+        ClusteredMention curr_cm = mentions.get(i);
+        if (exclude_pronoun && curr_cm.mention.headToken().isPronoun()) {
+          newMentions.add(0, curr_cm);
+          continue;
+        }
+
+        if (!curr_cm.mention.isSingleton()) {
+          newMentions.add(0, curr_cm);
+          continue;
+        }
+
+        for (int j = i + 1; j < mentions.size() - 1; j++) {
+          ClusteredMention next_cm = newMentions.get(j - i - 1);
+          double prob = headStats.getCount(
+            curr_cm.mention.headWord(), 
+            next_cm.mention.headWord()
+          );
+          if (prob > threshold && propose(next_cm, curr_cm)) {
+            Mention m = curr_cm.mention;
+            m.removeCoreference();
+            newMentions.add(0, m.markCoreferent(next_cm));
+            break;
+          } 
+        }
+        if (newMentions.size() < mentions.size() - i) {
+          newMentions.add(0, curr_cm);
+        }
+      }
+      return newMentions;
+    }
+
+    protected List<ClusteredMention> passSieveForward(List<ClusteredMention> mentions) {
       // System.out.print(headStats);
       List<ClusteredMention> newMentions = new ArrayList<ClusteredMention>();
       for (int i = 0; i < mentions.size(); i++) {
         ClusteredMention curr_cm = mentions.get(i);
+        if (exclude_pronoun && curr_cm.mention.headToken().isPronoun()) {
+          newMentions.add(curr_cm);
+          continue;
+        }
+
         if (!curr_cm.mention.isSingleton()) {
           newMentions.add(curr_cm);
           continue;
@@ -162,6 +209,7 @@ public class RuleBased implements CoreferenceSystem {
             curr_cm.mention.headWord(), 
             prev_cm.mention.headWord()
           );
+
           if (prob > threshold && propose(prev_cm, curr_cm)) {
             Mention m = curr_cm.mention;
             m.removeCoreference();
